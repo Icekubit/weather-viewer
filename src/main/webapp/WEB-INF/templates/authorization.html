@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorization page</title>
+</head>
+<body>
+<h2>Sign in</h2>
+
+<form action="authorization" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <div th:if="${invalidUser}"><span>Такого пользователя не существует</span></div>
+
+    <br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <div th:if="${invalidPassword}"><span>Неверный пароль</span></div>
+
+    <br>
+
+    <button type="submit">Login</button>
+</form>
+</body>
+</html>

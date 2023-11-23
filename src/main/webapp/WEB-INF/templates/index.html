@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+</head>
+<body>
+    <div th:if="${isAuthorised}">
+        <h1>Вы авторизованы</h1>
+    </div>
+    <div th:if="${!isAuthorised}">
+        <a href="registration">Sign up</a>
+        <a href="authorization">Sign in</a>
+    </div>
+</body>
+</html>
