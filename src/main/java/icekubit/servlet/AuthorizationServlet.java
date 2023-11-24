@@ -1,12 +1,8 @@
 package icekubit.servlet;
 
-import icekubit.entity.Session;
-import icekubit.entity.User;
 import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;
 import icekubit.service.AuthorisationService;
-import icekubit.service.SessionService;
-import icekubit.service.UserService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;

@@ -2,7 +2,6 @@ package icekubit.service;
 
 import icekubit.dao.SessionDao;
 import icekubit.dao.UserDao;
-import icekubit.entity.Session;
 import icekubit.entity.User;
 import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;

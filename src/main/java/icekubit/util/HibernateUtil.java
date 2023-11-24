@@ -1,7 +1,7 @@
 package icekubit.util;
 
 import icekubit.entity.Location;
-import icekubit.entity.Session;
+import icekubit.entity.UserSession;
 import icekubit.entity.User;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
@@ -14,7 +14,7 @@ public class HibernateUtil {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Location.class)
-                .addAnnotatedClass(Session.class)
+                .addAnnotatedClass(UserSession.class)
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
     }

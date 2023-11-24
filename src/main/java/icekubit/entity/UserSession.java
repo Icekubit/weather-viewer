@@ -11,7 +11,7 @@ import java.util.UUID;
 @Table(name = "Sessions")
 @Data
 @NoArgsConstructor
-public class Session {
+public class UserSession {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

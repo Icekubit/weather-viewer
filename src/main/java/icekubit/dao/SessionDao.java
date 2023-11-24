@@ -1,6 +1,7 @@
 package icekubit.dao;
 
 import icekubit.entity.User;
+import icekubit.entity.UserSession;
 import icekubit.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,7 +20,7 @@ public class SessionDao {
         return instance;
     }
 
-    public String save(icekubit.entity.Session userSession) {
+    public String save(UserSession userSession) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             session.persist(userSession);
@@ -29,7 +30,7 @@ public class SessionDao {
     }
 
     public String createSession(User user) {
-        icekubit.entity.Session userSession = new icekubit.entity.Session();
+        UserSession userSession = new UserSession();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             userSession.setUser(user);
@@ -39,18 +40,18 @@ public class SessionDao {
         return userSession.getId().toString();
     }
 
-    public Optional<icekubit.entity.Session> findById(UUID id) {
-        icekubit.entity.Session userSession;
+    public Optional<UserSession> findById(UUID id) {
+        UserSession userSession;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            userSession = session.get(icekubit.entity.Session.class, id);
+            userSession = session.get(UserSession.class, id);
         }
         return userSession == null ? Optional.empty() : Optional.of(userSession);
     }
 
-    public void delete(icekubit.entity.Session userSession) {
+    public void delete(UserSession userSession) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query query = session.createQuery("delete from Session where id = :sessionId");
+            Query query = session.createQuery("delete from UserSession where id = :sessionId");
             query.setParameter("sessionId", userSession.getId());
             query.executeUpdate();
             transaction.commit();

@@ -19,5 +19,5 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Location> userLocations;
     @OneToOne(mappedBy = "user")
-    private Session userSession;
+    private UserSession userSession;
 }

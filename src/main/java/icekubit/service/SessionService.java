@@ -2,8 +2,7 @@ package icekubit.service;
 
 import icekubit.dao.SessionDao;
 import icekubit.dao.UserDao;
-import icekubit.entity.Session;
-import icekubit.entity.User;
+import icekubit.entity.UserSession;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -20,19 +19,19 @@ public class SessionService {
     }
 
     public String createSession(int userId) {
-        Session session = new Session();
-        session.setUser(UserDao.getInstance().getUserById(userId).get());
-        session.setExpiresAt(LocalDateTime.now().plusHours(1));
-        return SessionDao.getInstance().save(session);
+        UserSession userSession = new UserSession();
+        userSession.setUser(UserDao.getInstance().getUserById(userId).get());
+        userSession.setExpiresAt(LocalDateTime.now().plusHours(1));
+        return SessionDao.getInstance().save(userSession);
     }
 
     public boolean isAuthorised(String uuid) {
-        Optional<Session> optionalSession = SessionDao.getInstance().findById(UUID.fromString(uuid));
+        Optional<UserSession> optionalSession = SessionDao.getInstance().findById(UUID.fromString(uuid));
         if (optionalSession.isEmpty()) {
             return false;
         } else {
-            Session session = optionalSession.get();
-            return session.getExpiresAt().isAfter(LocalDateTime.now());
+            UserSession userSession = optionalSession.get();
+            return userSession.getExpiresAt().isAfter(LocalDateTime.now());
         }
     }
 }
