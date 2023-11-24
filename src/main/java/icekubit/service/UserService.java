@@ -13,9 +13,6 @@ public class UserService {
         return instance;
     }
 
-    public User getUser(String username, String password) {
-        return UserDao.getInstance().getUserByUsernameAndPassword(username, password);
-    }
 
     public int save(String username, String password) {
         User user = new User();

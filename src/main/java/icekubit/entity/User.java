@@ -18,6 +18,6 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user")
     private List<Location> userLocations;
-    @OneToMany(mappedBy = "user")
-    private List<Session> userSessions;
+    @OneToOne(mappedBy = "user")
+    private Session userSession;
 }

@@ -44,24 +44,12 @@ public class UserDao {
     public Optional<User> getUserByUsername(String username) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM User " +
-                    "WHERE login = :login ";
+                    "WHERE Lower(login) = Lower(:login) ";
             Query<User> query = session.createQuery(hql, User.class);
             query.setParameter("login", username);
 
             List<User> resultList = query.getResultList();
             return resultList.stream().findFirst();
-        }
-    }
-
-    public User getUserByUsernameAndPassword(String username, String password) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM User " +
-                    "WHERE login = :login " +
-                    "AND password = :password";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setParameter("login", username);
-            query.setParameter("password", password);
-            return query.getSingleResult();
         }
     }
 }

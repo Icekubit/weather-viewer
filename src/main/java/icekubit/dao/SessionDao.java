@@ -47,5 +47,15 @@ public class SessionDao {
         return userSession == null ? Optional.empty() : Optional.of(userSession);
     }
 
+    public void delete(icekubit.entity.Session userSession) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query query = session.createQuery("delete from Session where id = :sessionId");
+            query.setParameter("sessionId", userSession.getId());
+            query.executeUpdate();
+            transaction.commit();
+        }
+    }
+
 
 }

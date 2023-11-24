@@ -16,7 +16,7 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private LocalDateTime expiresAt;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "UserId", referencedColumnName = "ID")
     private User user;
 }

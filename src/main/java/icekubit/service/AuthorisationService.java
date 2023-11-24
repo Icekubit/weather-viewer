@@ -26,7 +26,10 @@ public class AuthorisationService {
         } else if (!userOptional.get().getPassword().equals(password)) {
             throw new InvalidPasswordException();
         }
-        String sessionId = SessionService.getInstance().createSession(userOptional.get().getId());
-        return sessionId;
+        User user = userOptional.get();
+        if (user.getUserSession() != null) {
+            SessionDao.getInstance().delete(user.getUserSession());
+        }
+        return SessionService.getInstance().createSession(user.getId());
     }
 }
