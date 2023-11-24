@@ -7,6 +7,7 @@ import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class AuthorisationService {
     private static AuthorisationService instance;
@@ -27,8 +28,12 @@ public class AuthorisationService {
         }
         User user = userOptional.get();
         if (user.getUserSession() != null) {
-            SessionDao.getInstance().delete(user.getUserSession());
+            SessionDao.getInstance().delete(UUID.fromString(user.getUserSession().getId().toString()));
         }
         return SessionService.getInstance().createSession(user.getId());
+    }
+
+    public void logout(String userSessionId) {
+        SessionDao.getInstance().delete(UUID.fromString(userSessionId));
     }
 }

@@ -16,6 +16,6 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
 
-        SessionDao.getInstance().findById(UUID.fromString("f3897ab8-216c-429f-92a2-3c3ce5f77068"));
+        SessionDao.getInstance().delete(UUID.fromString("47fa5136-16dd-4900-b2c2-ee9553b92917"));
     }
 }

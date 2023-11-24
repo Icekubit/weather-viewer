@@ -48,11 +48,11 @@ public class SessionDao {
         return userSession == null ? Optional.empty() : Optional.of(userSession);
     }
 
-    public void delete(UserSession userSession) {
+    public void delete(UUID userSessionId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             Query query = session.createQuery("delete from UserSession where id = :sessionId");
-            query.setParameter("sessionId", userSession.getId());
+            query.setParameter("sessionId", userSessionId);
             query.executeUpdate();
             transaction.commit();
         }
