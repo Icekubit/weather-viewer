@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,17 +30,6 @@ public class UserSessionDao {
         return userSession.getId().toString();
     }
 
-    public String createSession(User user) {
-        UserSession userSession = new UserSession();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-            userSession.setUser(user);
-            session.persist(userSession);
-            transaction.commit();
-        }
-        return userSession.getId().toString();
-    }
-
     public Optional<UserSession> findById(UUID id) {
         UserSession userSession;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -51,9 +41,20 @@ public class UserSessionDao {
     public void delete(UUID userSessionId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query<UserSession> query
-                    = session.createQuery("delete from UserSession where id = :sessionId", UserSession.class);
+            Query query
+                    = session.createQuery("delete from UserSession where id = :sessionId");
             query.setParameter("sessionId", userSessionId);
+            query.executeUpdate();
+            transaction.commit();
+        }
+    }
+
+    public void deleteExpiredUserSessions(LocalDateTime now) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query query
+                    = session.createQuery("delete from UserSession where expiresAt < :now");
+            query.setParameter("now", now);
             query.executeUpdate();
             transaction.commit();
         }

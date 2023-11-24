@@ -2,6 +2,7 @@ package icekubit.servlet;
 
 import icekubit.entity.User;
 import icekubit.exception.UserAlreadyExistException;
+import icekubit.service.AuthorisationService;
 import icekubit.service.SessionService;
 import icekubit.service.UserService;
 import icekubit.util.ThymeleafUtil;
@@ -33,8 +34,8 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         try {
-            int userId = UserService.getInstance().save(username, password);
-            String sessionId = SessionService.getInstance().createSession(userId);
+            UserService.getInstance().save(username, password);
+            String sessionId = AuthorisationService.getInstance().authoriseUser(username, password);
             resp.addCookie(new Cookie("user_session", sessionId));
             resp.sendRedirect("/");
         } catch (UserAlreadyExistException e) {

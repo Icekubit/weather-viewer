@@ -1,12 +1,13 @@
 package icekubit;
 
 import icekubit.dao.UserSessionDao;
+import icekubit.service.UserSessionCollectorService;
 
 import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
 
-        UserSessionDao.getInstance().delete(UUID.fromString("47fa5136-16dd-4900-b2c2-ee9553b92917"));
+        UserSessionCollectorService.getInstance().removeExpiredUserSessions();
     }
 }

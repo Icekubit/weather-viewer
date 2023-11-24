@@ -5,10 +5,11 @@
     <title>Main page</title>
 </head>
 <body>
-    <div th:if="${isAuthorised}">
+    <div th:if="${username != null}">
+        <h1 th:text="'Hello, ' + ${username}"></h1>
         <a href="logout">Log out</a>
     </div>
-    <div th:if="${!isAuthorised}">
+    <div th:if="${username == null}">
         <a href="registration">Sign up</a>
         <a href="authorization">Sign in</a>
     </div>

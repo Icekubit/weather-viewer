@@ -26,7 +26,7 @@ public class LogoutServlet extends HttpServlet {
             System.out.println(userSessionId);
             AuthorisationService.getInstance().logout(userSessionId);
         } catch (Exception e) {
-            System.out.println("Something get wrong");
+            resp.sendError(500);
         }
         Cookie sessionCookie = new Cookie("user_session", "");
         sessionCookie.setMaxAge(0);

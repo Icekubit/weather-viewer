@@ -32,6 +32,7 @@ public class AuthorizationServlet extends HttpServlet {
         try {
             String sessionId = AuthorisationService.getInstance().authoriseUser(username, password);
             Cookie sessionCookie = new Cookie("user_session", sessionId);
+            sessionCookie.setMaxAge(60 * 60);
             resp.addCookie(sessionCookie);
             resp.sendRedirect("/");
         } catch (NoSuchUserException e1) {
