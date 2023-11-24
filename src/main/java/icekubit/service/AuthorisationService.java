@@ -1,6 +1,6 @@
 package icekubit.service;
 
-import icekubit.dao.SessionDao;
+import icekubit.dao.UserSessionDao;
 import icekubit.dao.UserDao;
 import icekubit.entity.User;
 import icekubit.exception.InvalidPasswordException;
@@ -28,12 +28,12 @@ public class AuthorisationService {
         }
         User user = userOptional.get();
         if (user.getUserSession() != null) {
-            SessionDao.getInstance().delete(UUID.fromString(user.getUserSession().getId().toString()));
+            UserSessionDao.getInstance().delete(UUID.fromString(user.getUserSession().getId().toString()));
         }
         return SessionService.getInstance().createSession(user.getId());
     }
 
     public void logout(String userSessionId) {
-        SessionDao.getInstance().delete(UUID.fromString(userSessionId));
+        UserSessionDao.getInstance().delete(UUID.fromString(userSessionId));
     }
 }

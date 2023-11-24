@@ -10,12 +10,12 @@ import org.hibernate.query.Query;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SessionDao {
-    private static SessionDao instance;
-    private SessionDao() {}
-    public static SessionDao getInstance() {
+public class UserSessionDao {
+    private static UserSessionDao instance;
+    private UserSessionDao() {}
+    public static UserSessionDao getInstance() {
         if (instance == null) {
-            instance = new SessionDao();
+            instance = new UserSessionDao();
         }
         return instance;
     }

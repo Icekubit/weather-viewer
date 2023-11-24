@@ -1,6 +1,6 @@
 package icekubit.service;
 
-import icekubit.dao.SessionDao;
+import icekubit.dao.UserSessionDao;
 import icekubit.dao.UserDao;
 import icekubit.entity.UserSession;
 
@@ -22,11 +22,11 @@ public class SessionService {
         UserSession userSession = new UserSession();
         userSession.setUser(UserDao.getInstance().getUserById(userId).get());
         userSession.setExpiresAt(LocalDateTime.now().plusHours(1));
-        return SessionDao.getInstance().save(userSession);
+        return UserSessionDao.getInstance().save(userSession);
     }
 
     public boolean isAuthorised(String uuid) {
-        Optional<UserSession> optionalSession = SessionDao.getInstance().findById(UUID.fromString(uuid));
+        Optional<UserSession> optionalSession = UserSessionDao.getInstance().findById(UUID.fromString(uuid));
         if (optionalSession.isEmpty()) {
             return false;
         } else {
