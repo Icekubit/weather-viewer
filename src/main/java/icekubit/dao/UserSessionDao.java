@@ -51,7 +51,8 @@ public class UserSessionDao {
     public void delete(UUID userSessionId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query query = session.createQuery("delete from UserSession where id = :sessionId");
+            Query<UserSession> query
+                    = session.createQuery("delete from UserSession where id = :sessionId", UserSession.class);
             query.setParameter("sessionId", userSessionId);
             query.executeUpdate();
             transaction.commit();
