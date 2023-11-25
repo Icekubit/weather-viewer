@@ -37,7 +37,6 @@ public class IndexServlet extends HttpServlet {
         }
         TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
-        System.out.println(username);
         context.setVariable("username", username);
         templateEngine.process("index", context, resp.getWriter());
 

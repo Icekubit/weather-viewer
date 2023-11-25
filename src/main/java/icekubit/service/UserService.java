@@ -17,7 +17,7 @@ public class UserService {
     public int save(String username, String password) {
         User user = new User();
         user.setLogin(username);
-        user.setPassword(password);
+        user.setPassword(PasswordService.getInstance().hashPassword(password));
         return UserDao.getInstance().save(user);
     }
 }
