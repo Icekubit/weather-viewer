@@ -6,6 +6,7 @@ import icekubit.entity.User;
 import icekubit.entity.UserSession;
 import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;
+import icekubit.util.PropertiesUtil;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 public class AuthorisationService {
     private static AuthorisationService instance;
+    private static final Long SESSION_DURATION = Long.parseLong(PropertiesUtil.get("session.duration"));
 
     private AuthorisationService() {
     }
@@ -54,7 +56,7 @@ public class AuthorisationService {
     private String createSession(int userId) {
         UserSession userSession = new UserSession();
         userSession.setUser(UserDao.getInstance().getUserById(userId).get());
-        userSession.setExpiresAt(LocalDateTime.now().plusHours(1));
+        userSession.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_DURATION));
         return UserSessionDao.getInstance().save(userSession);
     }
 
