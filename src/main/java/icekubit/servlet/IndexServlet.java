@@ -2,7 +2,6 @@ package icekubit.servlet;
 
 import icekubit.entity.User;
 import icekubit.service.AuthorisationService;
-import icekubit.service.SessionService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;

@@ -1,9 +1,7 @@
 package icekubit.servlet;
 
-import icekubit.entity.User;
 import icekubit.exception.UserAlreadyExistException;
 import icekubit.service.AuthorisationService;
-import icekubit.service.SessionService;
 import icekubit.service.UserService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.annotation.WebServlet;
