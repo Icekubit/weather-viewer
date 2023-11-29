@@ -1,4 +1,4 @@
-package icekubit.config;
+package icekubit.listener;
 
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletContext;

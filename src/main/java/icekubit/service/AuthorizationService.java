@@ -6,43 +6,45 @@ import icekubit.entity.User;
 import icekubit.entity.UserSession;
 import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;
+import icekubit.util.PasswordUtil;
 import icekubit.util.PropertiesUtil;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AuthorisationService {
-    private static AuthorisationService instance;
+public class AuthorizationService {
+
+    private final UserSessionDao userSessionDao;
+    private final UserDao userDao;
+    private final PasswordUtil passwordUtil;
     private static final Long SESSION_DURATION = Long.parseLong(PropertiesUtil.get("session.duration"));
 
-    private AuthorisationService() {
+    public AuthorizationService(UserSessionDao userSessionDao
+            , UserDao userDao
+            , PasswordUtil passwordUtil) {
+        this.userSessionDao = userSessionDao;
+        this.userDao = userDao;
+        this.passwordUtil = passwordUtil;
     }
 
-    public static AuthorisationService getInstance() {
-        if (instance == null) {
-            instance = new AuthorisationService();
-        }
-        return instance;
-    }
 
-    public String authoriseUser(String username, String password) {
-        Optional<User> userOptional = UserDao.getInstance().getUserByUsername(username);
+    public String authorizeUser(String username, String password) {
+        Optional<User> userOptional = userDao.getUserByUsername(username);
         if (userOptional.isEmpty()) {
             throw new NoSuchUserException();
-        } else if (!PasswordService.getInstance().checkPassword(userOptional.get().getPassword(), password)) {
+        } else if (!passwordUtil.checkPassword(userOptional.get().getPassword(), password)) {
             throw new InvalidPasswordException();
         }
         User user = userOptional.get();
         if (user.getUserSession() != null) {
-            UserSessionDao.getInstance().delete(user.getUserSession().getId());
+            userSessionDao.delete(user.getUserSession().getId());
         }
         return createSession(user.getId());
     }
 
     public Optional<User> getUserForThisSession(String uuid) {
-        Optional<UserSession> optionalSession = UserSessionDao.getInstance().findById(UUID.fromString(uuid));
+        Optional<UserSession> optionalSession = userSessionDao.findById(UUID.fromString(uuid));
         if (optionalSession.isPresent() && optionalSession.get().getExpiresAt().isAfter(LocalDateTime.now())) {
             return Optional.of(optionalSession.get().getUser());
         }
@@ -50,14 +52,14 @@ public class AuthorisationService {
     }
 
     public void logout(String userSessionId) {
-        UserSessionDao.getInstance().delete(UUID.fromString(userSessionId));
+        userSessionDao.delete(UUID.fromString(userSessionId));
     }
 
     private String createSession(int userId) {
         UserSession userSession = new UserSession();
-        userSession.setUser(UserDao.getInstance().getUserById(userId).get());
+        userSession.setUser(userDao.getUserById(userId).get());
         userSession.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_DURATION));
-        return UserSessionDao.getInstance().save(userSession);
+        return userSessionDao.save(userSession);
     }
 
 }

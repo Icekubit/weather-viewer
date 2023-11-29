@@ -1,9 +1,12 @@
 package icekubit.servlet;
 
 import icekubit.exception.UserAlreadyExistException;
-import icekubit.service.AuthorisationService;
-import icekubit.service.UserService;
+import icekubit.service.AuthorizationService;
+import icekubit.service.RegistrationService;
 import icekubit.util.ThymeleafUtil;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -16,6 +19,15 @@ import java.io.IOException;
 
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
+    private AuthorizationService authorizationService;
+    private RegistrationService registrationService;
+
+    @Override
+    public void init(ServletConfig config) {
+        ServletContext servletContext = config.getServletContext();
+        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+        registrationService = (RegistrationService) servletContext.getAttribute("registrationService");
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
@@ -32,8 +44,8 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         try {
-            UserService.getInstance().save(username, password);
-            String sessionId = AuthorisationService.getInstance().authoriseUser(username, password);
+            registrationService.registerUser(username, password);
+            String sessionId = authorizationService.authorizeUser(username, password);
             resp.addCookie(new Cookie("user_session", sessionId));
             resp.sendRedirect("/");
         } catch (UserAlreadyExistException e) {

@@ -1,4 +1,4 @@
-package icekubit.config;
+package icekubit.listener;
 
 import icekubit.util.HibernateUtil;
 import jakarta.servlet.ServletContextEvent;

@@ -1,6 +1,8 @@
 package icekubit.servlet;
 
-import icekubit.service.AuthorisationService;
+import icekubit.service.AuthorizationService;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -17,6 +19,13 @@ import java.util.Arrays;
 
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
+    private AuthorizationService authorizationService;
+
+    @Override
+    public void init(ServletConfig config) {
+        ServletContext servletContext = config.getServletContext();
+        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -24,7 +33,7 @@ public class LogoutServlet extends HttpServlet {
                     .filter(cookie -> cookie.getName().equals("user_session"))
                     .findFirst().get().getValue();
             System.out.println(userSessionId);
-            AuthorisationService.getInstance().logout(userSessionId);
+            authorizationService.logout(userSessionId);
         } catch (Exception e) {
             resp.sendError(500);
         }

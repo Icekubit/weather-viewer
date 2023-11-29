@@ -1,8 +1,11 @@
 package icekubit.servlet;
 
 import icekubit.entity.User;
-import icekubit.service.AuthorisationService;
+import icekubit.service.AuthorizationService;
 import icekubit.util.ThymeleafUtil;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +21,13 @@ import java.util.Optional;
 @WebServlet("")
 public class IndexServlet extends HttpServlet {
 
+    private AuthorizationService authorizationService;
+
+    @Override
+    public void init(ServletConfig config) {
+        ServletContext servletContext = config.getServletContext();
+        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -28,7 +38,7 @@ public class IndexServlet extends HttpServlet {
                     .filter(cookie -> cookie.getName().equals("user_session"))
                     .findFirst();
             if (cookieOptional.isPresent()) {
-                Optional<User> userOptional = AuthorisationService.getInstance().getUserForThisSession(cookieOptional.get().getValue());
+                Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
                 if (userOptional.isPresent()) {
                     username = userOptional.get().getLogin();
                 }
