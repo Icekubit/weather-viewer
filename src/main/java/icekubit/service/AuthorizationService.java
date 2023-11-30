@@ -17,23 +17,19 @@ public class AuthorizationService {
 
     private final UserSessionDao userSessionDao;
     private final UserDao userDao;
-    private final PasswordUtil passwordUtil;
     private static final Long SESSION_DURATION = Long.parseLong(PropertiesUtil.get("session.duration"));
 
-    public AuthorizationService(UserSessionDao userSessionDao
-            , UserDao userDao
-            , PasswordUtil passwordUtil) {
+    public AuthorizationService(UserSessionDao userSessionDao, UserDao userDao) {
         this.userSessionDao = userSessionDao;
         this.userDao = userDao;
-        this.passwordUtil = passwordUtil;
     }
 
 
-    public String authorizeUser(String username, String password) {
+    public UUID authorizeUser(String username, String password) {
         Optional<User> userOptional = userDao.getUserByUsername(username);
         if (userOptional.isEmpty()) {
             throw new NoSuchUserException();
-        } else if (!passwordUtil.checkPassword(userOptional.get().getPassword(), password)) {
+        } else if (!PasswordUtil.checkPassword(userOptional.get().getPassword(), password)) {
             throw new InvalidPasswordException();
         }
         User user = userOptional.get();
@@ -55,7 +51,7 @@ public class AuthorizationService {
         userSessionDao.delete(UUID.fromString(userSessionId));
     }
 
-    private String createSession(int userId) {
+    private UUID createSession(int userId) {
         UserSession userSession = new UserSession();
         userSession.setUser(userDao.getUserById(userId).get());
         userSession.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_DURATION));

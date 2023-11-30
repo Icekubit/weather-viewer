@@ -6,18 +6,16 @@ import icekubit.util.PasswordUtil;
 
 public class RegistrationService {
     private final UserDao userDao;
-    private final PasswordUtil passwordUtil;
 
-    public RegistrationService(UserDao userDao, PasswordUtil passwordUtil) {
+    public RegistrationService(UserDao userDao) {
         this.userDao = userDao;
-        this.passwordUtil = passwordUtil;
     }
 
 
     public int registerUser(String username, String password) {
         User user = new User();
         user.setLogin(username);
-        user.setPassword(passwordUtil.hashPassword(password));
+        user.setPassword(PasswordUtil.hashPassword(password));
         return userDao.save(user);
     }
 }

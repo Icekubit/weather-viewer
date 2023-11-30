@@ -14,7 +14,6 @@ import jakarta.servlet.annotation.WebListener;
 public class ServletContextInitializer implements ServletContextListener {
     private UserSessionDao userSessionDao;
     private UserDao userDao;
-    private PasswordUtil passwordUtil;
     private AuthorizationService authorizationService;
     private RegistrationService registrationService;
     @Override
@@ -23,9 +22,8 @@ public class ServletContextInitializer implements ServletContextListener {
 
         userSessionDao = new UserSessionDao();
         userDao = new UserDao();
-        passwordUtil = new PasswordUtil();
-        authorizationService = new AuthorizationService(userSessionDao, userDao, passwordUtil);
-        registrationService = new RegistrationService(userDao, passwordUtil);
+        authorizationService = new AuthorizationService(userSessionDao, userDao);
+        registrationService = new RegistrationService(userDao);
 
         servletContext.setAttribute("authorizationService", authorizationService);
         servletContext.setAttribute("registrationService", registrationService);

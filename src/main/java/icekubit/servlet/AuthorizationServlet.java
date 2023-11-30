@@ -3,6 +3,7 @@ package icekubit.servlet;
 import icekubit.exception.InvalidPasswordException;
 import icekubit.exception.NoSuchUserException;
 import icekubit.service.AuthorizationService;
+import icekubit.util.PropertiesUtil;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -16,10 +17,12 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/authorization")
 public class AuthorizationServlet extends HttpServlet {
     private AuthorizationService authorizationService;
+    private static final Integer SESSION_DURATION = Integer.parseInt(PropertiesUtil.get("session.duration"));
 
     @Override
     public void init(ServletConfig config) {
@@ -41,9 +44,9 @@ public class AuthorizationServlet extends HttpServlet {
         TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
         try {
-            String sessionId = authorizationService.authorizeUser(username, password);
-            Cookie sessionCookie = new Cookie("user_session", sessionId);
-            sessionCookie.setMaxAge(60 * 60);
+            UUID sessionId = authorizationService.authorizeUser(username, password);
+            Cookie sessionCookie = new Cookie("user_session", sessionId.toString());
+            sessionCookie.setMaxAge(SESSION_DURATION);
             resp.addCookie(sessionCookie);
             resp.sendRedirect("/");
         } catch (NoSuchUserException e1) {

@@ -14,13 +14,13 @@ import java.util.UUID;
 public class UserSessionDao {
 
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    public String save(UserSession userSession) {
+    public UUID save(UserSession userSession) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             session.persist(userSession);
             transaction.commit();
         }
-        return userSession.getId().toString();
+        return userSession.getId();
     }
 
     public Optional<UserSession> findById(UUID id) {
@@ -42,6 +42,7 @@ public class UserSessionDao {
         }
     }
 
+
     public void deleteExpiredUserSessions(LocalDateTime now) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -54,4 +55,13 @@ public class UserSessionDao {
     }
 
 
+    public void deleteAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query query
+                    = session.createQuery("delete from UserSession where user.id > 0");
+            query.executeUpdate();
+            transaction.commit();
+        }
+    }
 }

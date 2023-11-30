@@ -45,4 +45,14 @@ public class UserDao {
             return resultList.stream().findFirst();
         }
     }
+
+    public void deleteAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query query
+                    = session.createQuery("delete from User where id > 0");
+            query.executeUpdate();
+            transaction.commit();
+        }
+    }
 }

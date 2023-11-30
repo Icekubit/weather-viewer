@@ -16,6 +16,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.UUID;
 
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
@@ -45,8 +47,8 @@ public class RegistrationServlet extends HttpServlet {
         String password = req.getParameter("password");
         try {
             registrationService.registerUser(username, password);
-            String sessionId = authorizationService.authorizeUser(username, password);
-            resp.addCookie(new Cookie("user_session", sessionId));
+            UUID sessionId = authorizationService.authorizeUser(username, password);
+            resp.addCookie(new Cookie("user_session", sessionId.toString()));
             resp.sendRedirect("/");
         } catch (UserAlreadyExistException e) {
             context.setVariable("isUserAlreadyExist", true);
