@@ -13,5 +13,12 @@
         <a href="registration">Sign up</a>
         <a href="authorization">Sign in</a>
     </div>
+    <div th:if="${username != null}">
+        <form action="search_location" method="post">
+            <label for="search-input">Enter location:</label>
+            <input type="text" id="search-input" name="location" required>
+            <button type="submit">Search!</button>
+        </form>
+    </div>
 </body>
 </html>

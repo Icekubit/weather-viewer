@@ -20,7 +20,7 @@ public class WeatherService {
     private final static String API_KEY
             = URLEncoder.encode(System.getenv("OPEN_WEATHER_API_KEY"), StandardCharsets.UTF_8);
 
-    public List<LocationDto> searchLocationByName(String name) throws IOException, InterruptedException {
+    public List<LocationDto> searchLocationsByName(String name) throws IOException, InterruptedException {
         URI uri = URI.create(String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s"
                 , name.replaceAll(" ", "_")
                 , 5
