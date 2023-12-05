@@ -8,18 +8,23 @@ import icekubit.dto.WeatherDto;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class WeatherService {
 
+    private final static String API_KEY
+            = URLEncoder.encode(System.getenv("OPEN_WEATHER_API_KEY"), StandardCharsets.UTF_8);
+
     public List<LocationDto> searchLocationByName(String name) throws IOException, InterruptedException {
-        URI uri = URI.create("http://api.openweathermap.org/geo/1.0/direct?" +
-                        "q=" + name.replaceAll(" ", "_") +
-                        "&limit=5&" +
-                        "appid=" + System.getenv("OPEN_WEATHER_API_KEY"));
+        URI uri = URI.create(String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s"
+                , name.replaceAll(" ", "_")
+                , 5
+                , API_KEY));
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .GET()
@@ -34,10 +39,12 @@ public class WeatherService {
     }
 
     public WeatherDto getWeatherByCoordinates(double latitude, double longitude) throws IOException, InterruptedException {
-        URI uri = URI.create("http://api.openweathermap.org/data/2.5/weather?" +
-                "lat=" + latitude +
-                "&lon=" + longitude +
-                "&appid=" + System.getenv("OPEN_WEATHER_API_KEY"));
+        URI uri = URI.create(
+                String.format("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=%s"
+        , latitude
+        , longitude
+        , API_KEY
+        , "metric"));
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .GET()
