@@ -13,7 +13,9 @@
     <div th:each="location: ${locations}">
         <p th:text="${location.name + ', ' + location.country}"></p>
         <form action="add_location" method="post">
-            <input type="hidden" th:value="${location}" th:attr="name='location'"/>
+            <input type="hidden" th:value="${location.lat}" th:attr="name='latitude'"/>
+            <input type="hidden" th:value="${location.lon}" th:attr="name='longitude'"/>
+            <input type="hidden" th:value="${location.name}" th:attr="name='name'"/>
             <button type="submit">Add</button>
         </form>
     </div>

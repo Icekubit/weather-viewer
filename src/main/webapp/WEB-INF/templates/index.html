@@ -20,5 +20,14 @@
             <button type="submit">Search!</button>
         </form>
     </div>
+    <div th:if="${userLocations != null}">
+        <div th:each="userLocation: ${userLocations}">
+            <p th:text="${userLocation}"></p>
+            <form action="delete_location" method="post">
+                <input type="hidden" th:value="${userLocation.locationId}" th:attr="name='locationId'"/>
+                <button type="submit">delete</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

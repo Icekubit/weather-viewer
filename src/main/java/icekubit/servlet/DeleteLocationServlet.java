@@ -18,9 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
-@WebServlet("/add_location")
-public class AddLocationServlet extends HttpServlet {
-
+@WebServlet("/delete_location")
+public class DeleteLocationServlet extends HttpServlet {
     private AuthorizationService authorizationService;
     private WeatherService weatherService;
     @Override
@@ -45,14 +44,8 @@ public class AddLocationServlet extends HttpServlet {
                 }
             }
         }
-        Location location = Location
-                .builder()
-                .name(req.getParameter("name"))
-                .latitude(Double.parseDouble(req.getParameter("latitude")))
-                .longitude(Double.parseDouble(req.getParameter("longitude")))
-                .user(user)
-                .build();
-        weatherService.save(location);
+        int locationId = Integer.parseInt(req.getParameter("locationId"));
+        weatherService.deleteLocation(user, locationId);
         resp.sendRedirect("/");
     }
 }

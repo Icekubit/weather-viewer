@@ -1,5 +1,6 @@
 package icekubit.listener;
 
+import icekubit.dao.LocationDao;
 import icekubit.dao.UserDao;
 import icekubit.dao.UserSessionDao;
 import icekubit.service.AuthorizationService;
@@ -15,18 +16,21 @@ import jakarta.servlet.annotation.WebListener;
 public class ServletContextInitializer implements ServletContextListener {
     private UserSessionDao userSessionDao;
     private UserDao userDao;
+    private LocationDao locationDao;
     private AuthorizationService authorizationService;
     private RegistrationService registrationService;
     private WeatherService weatherService;
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
 
         userSessionDao = new UserSessionDao();
         userDao = new UserDao();
+        locationDao = new LocationDao();
         authorizationService = new AuthorizationService(userSessionDao, userDao);
         registrationService = new RegistrationService(userDao);
-        weatherService = new WeatherService();
+        weatherService = new WeatherService(locationDao);
 
         servletContext.setAttribute("authorizationService", authorizationService);
         servletContext.setAttribute("registrationService", registrationService);

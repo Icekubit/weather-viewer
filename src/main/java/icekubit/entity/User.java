@@ -24,4 +24,13 @@ public class User {
     private List<Location> userLocations;
     @OneToOne(mappedBy = "user")
     private UserSession userSession;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

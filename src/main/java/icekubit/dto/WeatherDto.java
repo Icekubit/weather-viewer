@@ -16,18 +16,20 @@ public class WeatherDto {
     private String windDirection;
     private String weather;
     private String descriptionOfWeather;
+    private int locationId;
+
 
     @JsonProperty("main")
     private void unpackMain(Map<String, Object> main) {
-        this.temp = (int) Math.round((Double) main.get("temp"));
-        this.feelsLikeTemp = (int) Math.round((Double) main.get("feels_like"));
-        this.pressure = convertHectoPascalToTorr((int) main.get("pressure"));
+        this.temp = (int) Math.round(((Number) main.get("temp")).doubleValue());
+        this.feelsLikeTemp = (int) Math.round(((Number) main.get("feels_like")).doubleValue());
+        this.pressure = convertHectopascalToTorr((int) main.get("pressure"));
         this.humidity = (Integer) main.get("humidity");
     }
 
     @JsonProperty("wind")
     private void unpackWind(Map<String, Object> wind) {
-        this.windSpeed = ((Double) wind.get("speed")).intValue();
+        this.windSpeed = (int) Math.round(((Number) wind.get("speed")).doubleValue());
         this.windDirection = convertDegToDirection((Integer) wind.get("deg"));
     }
 
@@ -37,13 +39,13 @@ public class WeatherDto {
         this.descriptionOfWeather = (String) weather[0].get("description");
     }
 
-    private int convertHectoPascalToTorr(int hectoPascalPressure) {
+    private int convertHectopascalToTorr(int hectoPascalPressure) {
         return (int) Math.round(hectoPascalPressure * 0.75006);
     }
 
     private String convertDegToDirection(int deg) {
         switch ((int) Math.round(deg / 45.0)) {
-            case 0:
+            case 0, 8:
                 return "north";
             case 1:
                 return "northeast";
