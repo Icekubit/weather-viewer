@@ -9,6 +9,8 @@ import icekubit.entity.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class UserWeatherService {
 
@@ -35,15 +37,14 @@ public class UserWeatherService {
     public List<LocationDto> searchLocationsByNameAndExcludeSaved(User user, String name)
             throws IOException, InterruptedException {
         List<LocationDto> foundLocations = weatherApiService.searchLocationsByName(name);
-        List<LocationDto> foundLocationsExcludedSaved = new ArrayList<>();
-        for (LocationDto foundLocation: foundLocations) {
-            if (locationDao.findLocation(user, foundLocation.getLat(), foundLocation.getLon()).isEmpty()) {
-                foundLocationsExcludedSaved.add(foundLocation);
-            }
-        }
-        return foundLocationsExcludedSaved;
-
-
+        List<Location> userLocations = locationDao.getLocationsForThisUser(user);
+        return foundLocations.stream()
+                .filter(foundLocation ->
+                        userLocations.stream()
+                                .noneMatch(userLocation ->
+                                        Objects.equals(foundLocation.getLat(), userLocation.getLatitude()) &&
+                                                Objects.equals(foundLocation.getLon(), userLocation.getLongitude())))
+                .collect(Collectors.toList());
     }
 
     public void save(Location location) {
