@@ -1,5 +1,6 @@
 package icekubit.servlet;
 
+import icekubit.entity.User;
 import icekubit.service.AuthorizationService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 
 // TODO переделать кэтч
 
@@ -28,17 +30,20 @@ public class LogoutServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            String userSessionId = Arrays.stream(req.getCookies())
+        Cookie[] cookies = req.getCookies();
+        User user = null;
+        if (cookies != null) {
+            Optional<Cookie> cookieOptional = Arrays.stream(cookies)
                     .filter(cookie -> cookie.getName().equals("user_session"))
-                    .findFirst().get().getValue();
-            authorizationService.logout(userSessionId);
-        } catch (Exception e) {
-            resp.sendError(500);
+                    .findFirst();
+            if (cookieOptional.isPresent()) {
+                authorizationService.logout(cookieOptional.get().getValue());
+                Cookie sessionCookie = new Cookie("user_session", "");
+                sessionCookie.setMaxAge(0);
+                resp.addCookie(sessionCookie);
+            }
         }
-        Cookie sessionCookie = new Cookie("user_session", "");
-        sessionCookie.setMaxAge(0);
-        resp.addCookie(sessionCookie);
+
         resp.sendRedirect("/");
     }
 }

@@ -42,11 +42,11 @@ public class DeleteLocationServlet extends HttpServlet {
                 Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
+                    int locationId = Integer.parseInt(req.getParameter("locationId"));
+                    weatherService.deleteLocation(user, locationId);
                 }
             }
         }
-        int locationId = Integer.parseInt(req.getParameter("locationId"));
-        weatherService.deleteLocation(user, locationId);
         resp.sendRedirect("/");
     }
 }

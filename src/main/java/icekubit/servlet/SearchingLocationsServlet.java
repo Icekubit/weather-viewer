@@ -45,23 +45,27 @@ public class SearchingLocationsServlet extends HttpServlet {
                 Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
+
+                    TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
+                    WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
+                    List<LocationDto> locations = null;
+                    try {
+                        locations = weatherService
+                                .searchLocationsByNameAndExcludeSaved(user, req.getParameter("location"));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    context.setVariable("locations", locations);
+                    templateEngine.process("searching-location", context, resp.getWriter());
+                } else {
+                    resp.sendRedirect("/");
                 }
+            } else {
+                resp.sendRedirect("/");
             }
+        } else {
+            resp.sendRedirect("/");
         }
 
-        TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
-        WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
-        List<LocationDto> locations = null;
-
-        try {
-            locations = weatherService
-                    .searchLocationsByNameAndExcludeSaved(user, req.getParameter("location"));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        context.setVariable("locations", locations);
-
-        templateEngine.process("searching-location", context, resp.getWriter());
     }
 }

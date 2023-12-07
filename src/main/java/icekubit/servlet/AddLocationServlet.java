@@ -42,17 +42,18 @@ public class AddLocationServlet extends HttpServlet {
                 Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
+                    Location location = Location
+                            .builder()
+                            .name(req.getParameter("name"))
+                            .latitude(new BigDecimal(req.getParameter("latitude")))
+                            .longitude(new BigDecimal(req.getParameter("longitude")))
+                            .user(user)
+                            .build();
+                    weatherService.save(location);
                 }
             }
         }
-        Location location = Location
-                .builder()
-                .name(req.getParameter("name"))
-                .latitude(new BigDecimal(req.getParameter("latitude")))
-                .longitude(new BigDecimal(req.getParameter("longitude")))
-                .user(user)
-                .build();
-        weatherService.save(location);
+
         resp.sendRedirect("/");
 
     }
