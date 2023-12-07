@@ -10,6 +10,7 @@ import icekubit.entity.Location;
 import icekubit.entity.User;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -30,7 +31,7 @@ public class WeatherService {
         this.locationDao = locationDao;
     }
 
-    public List<LocationDto> searchLocationsByName(String name) throws IOException, InterruptedException {
+    private List<LocationDto> searchLocationsByName(String name) throws IOException, InterruptedException {
         URI uri = URI.create(String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s"
                 , name.replaceAll(" ", "_")
                 , 5
@@ -48,7 +49,8 @@ public class WeatherService {
         return objectMapper.readValue(response.body(), new TypeReference<List<LocationDto>>(){});
     }
 
-    public WeatherDto getWeatherByCoordinates(double latitude, double longitude) throws IOException, InterruptedException {
+    public WeatherDto getWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude)
+            throws IOException, InterruptedException {
         URI uri = URI.create(
                 String.format("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=%s"
         , latitude
@@ -79,7 +81,22 @@ public class WeatherService {
         return userLocations;
     }
 
+    public List<LocationDto> searchLocationsByNameAndExcludeSaved(User user, String name)
+            throws IOException, InterruptedException {
+        List<LocationDto> foundLocations = searchLocationsByName(name);
+        List<LocationDto> foundLocationsExcludedSaved = new ArrayList<>();
+        for (LocationDto foundLocation: foundLocations) {
+            if (locationDao.findLocation(user, foundLocation.getLat(), foundLocation.getLon()).isEmpty()) {
+                foundLocationsExcludedSaved.add(foundLocation);
+            }
+        }
+        return foundLocationsExcludedSaved;
+
+
+    }
+
     public void save(Location location) {
+
         locationDao.save(location);
     }
 

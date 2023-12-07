@@ -39,8 +39,8 @@ public class WeatherDto {
         this.descriptionOfWeather = (String) weather[0].get("description");
     }
 
-    private int convertHectopascalToTorr(int hectoPascalPressure) {
-        return (int) Math.round(hectoPascalPressure * 0.75006);
+    private int convertHectopascalToTorr(int hectopascalPressure) {
+        return (int) Math.round(hectopascalPressure * 0.75006);
     }
 
     private String convertDegToDirection(int deg) {

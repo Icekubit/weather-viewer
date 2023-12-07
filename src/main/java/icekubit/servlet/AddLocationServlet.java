@@ -1,6 +1,5 @@
 package icekubit.servlet;
 
-import icekubit.dao.LocationDao;
 import icekubit.entity.Location;
 import icekubit.entity.User;
 import icekubit.service.AuthorizationService;
@@ -15,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -48,11 +48,12 @@ public class AddLocationServlet extends HttpServlet {
         Location location = Location
                 .builder()
                 .name(req.getParameter("name"))
-                .latitude(Double.parseDouble(req.getParameter("latitude")))
-                .longitude(Double.parseDouble(req.getParameter("longitude")))
+                .latitude(new BigDecimal(req.getParameter("latitude")))
+                .longitude(new BigDecimal(req.getParameter("longitude")))
                 .user(user)
                 .build();
         weatherService.save(location);
         resp.sendRedirect("/");
+
     }
 }

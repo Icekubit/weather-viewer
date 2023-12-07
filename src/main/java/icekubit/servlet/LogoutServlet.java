@@ -32,7 +32,6 @@ public class LogoutServlet extends HttpServlet {
             String userSessionId = Arrays.stream(req.getCookies())
                     .filter(cookie -> cookie.getName().equals("user_session"))
                     .findFirst().get().getValue();
-            System.out.println(userSessionId);
             authorizationService.logout(userSessionId);
         } catch (Exception e) {
             resp.sendError(500);
