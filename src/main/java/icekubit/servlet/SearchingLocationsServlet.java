@@ -3,7 +3,7 @@ package icekubit.servlet;
 import icekubit.dto.LocationDto;
 import icekubit.entity.User;
 import icekubit.service.AuthorizationService;
-import icekubit.service.WeatherService;
+import icekubit.service.UserWeatherService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -24,13 +24,13 @@ import java.util.Optional;
 public class SearchingLocationsServlet extends HttpServlet {
 
     private AuthorizationService authorizationService;
-    private WeatherService weatherService;
+    private UserWeatherService userWeatherService;
 
     @Override
     public void init(ServletConfig config)  {
         ServletContext servletContext = config.getServletContext();
         authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
-        weatherService = (WeatherService) servletContext.getAttribute("weatherService");
+        userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SearchingLocationsServlet extends HttpServlet {
                     WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
                     List<LocationDto> locations = null;
                     try {
-                        locations = weatherService
+                        locations = userWeatherService
                                 .searchLocationsByNameAndExcludeSaved(user, req.getParameter("location"));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);

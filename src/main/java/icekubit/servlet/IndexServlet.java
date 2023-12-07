@@ -1,21 +1,18 @@
 package icekubit.servlet;
 
-import icekubit.dao.LocationDao;
 import icekubit.dto.WeatherDto;
-import icekubit.entity.Location;
 import icekubit.entity.User;
 import icekubit.service.AuthorizationService;
-import icekubit.service.WeatherService;
+import icekubit.service.UserWeatherService;
+import icekubit.service.WeatherApiService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.LazyInitializationException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -28,13 +25,13 @@ import java.util.Optional;
 public class IndexServlet extends HttpServlet {
 
     private AuthorizationService authorizationService;
-    private WeatherService weatherService;
+    private UserWeatherService userWeatherService;
 
     @Override
     public void init(ServletConfig config) {
         ServletContext servletContext = config.getServletContext();
         authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
-        weatherService = (WeatherService) servletContext.getAttribute("weatherService");
+        userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
@@ -53,7 +50,7 @@ public class IndexServlet extends HttpServlet {
                     user = userOptional.get();
                     username = user.getLogin();
                     try {
-                        userLocations = weatherService.getUserLocations(user);
+                        userLocations = userWeatherService.getUserLocations(user);
                         System.out.println(userLocations);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);

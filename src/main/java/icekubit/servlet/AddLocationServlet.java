@@ -3,7 +3,8 @@ package icekubit.servlet;
 import icekubit.entity.Location;
 import icekubit.entity.User;
 import icekubit.service.AuthorizationService;
-import icekubit.service.WeatherService;
+import icekubit.service.UserWeatherService;
+import icekubit.service.WeatherApiService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -22,12 +23,12 @@ import java.util.Optional;
 public class AddLocationServlet extends HttpServlet {
 
     private AuthorizationService authorizationService;
-    private WeatherService weatherService;
+    private UserWeatherService userWeatherService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
         authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
-        weatherService = (WeatherService) servletContext.getAttribute("weatherService");
+        userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
@@ -49,7 +50,7 @@ public class AddLocationServlet extends HttpServlet {
                             .longitude(new BigDecimal(req.getParameter("longitude")))
                             .user(user)
                             .build();
-                    weatherService.save(location);
+                    userWeatherService.save(location);
                 }
             }
         }

@@ -4,8 +4,8 @@ import icekubit.dao.LocationDao;
 import icekubit.dao.UserDao;
 import icekubit.dao.UserSessionDao;
 import icekubit.service.AuthorizationService;
-import icekubit.service.WeatherService;
-import icekubit.util.PasswordUtil;
+import icekubit.service.UserWeatherService;
+import icekubit.service.WeatherApiService;
 import icekubit.service.RegistrationService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -19,7 +19,9 @@ public class ServletContextInitializer implements ServletContextListener {
     private LocationDao locationDao;
     private AuthorizationService authorizationService;
     private RegistrationService registrationService;
-    private WeatherService weatherService;
+    private UserWeatherService userWeatherService;
+    private WeatherApiService weatherApiService;
+
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -30,10 +32,12 @@ public class ServletContextInitializer implements ServletContextListener {
         locationDao = new LocationDao();
         authorizationService = new AuthorizationService(userSessionDao, userDao);
         registrationService = new RegistrationService(userDao);
-        weatherService = new WeatherService(locationDao);
+        weatherApiService = new WeatherApiService();
+        userWeatherService = new UserWeatherService(locationDao, weatherApiService);
 
         servletContext.setAttribute("authorizationService", authorizationService);
         servletContext.setAttribute("registrationService", registrationService);
-        servletContext.setAttribute("weatherService", weatherService);
+        servletContext.setAttribute("weatherService", weatherApiService);
+        servletContext.setAttribute("userWeatherService", userWeatherService);
     }
 }
