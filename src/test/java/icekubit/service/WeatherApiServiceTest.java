@@ -1,6 +1,9 @@
 package icekubit.service;
 
 import icekubit.dto.LocationDto;
+import icekubit.exception.WeatherApiException;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.shouldHaveThrown;
 import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -90,5 +94,52 @@ public class WeatherApiServiceTest {
                         BigDecimal.valueOf(37.6174943));
         List<LocationDto> locations = weatherApiService.searchLocationsByName("Moscow");
         assertThat(locations).contains(moscowDto);
+    }
+
+    @Test
+    void searchLocationByNameThrowsExceptionWhenResponseWithErrorStatus() throws IOException, InterruptedException {
+        HttpResponse<String> httpResponse = new HttpResponse<>() {
+            @Override
+            public int statusCode() {
+                return 500;
+            }
+
+            @Override
+            public HttpRequest request() {
+                return null;
+            }
+
+            @Override
+            public Optional<HttpResponse<String>> previousResponse() {
+                return Optional.empty();
+            }
+
+            @Override
+            public HttpHeaders headers() {
+                return null;
+            }
+
+            @Override
+            public String body() {
+                return null;
+            }
+
+            @Override
+            public Optional<SSLSession> sslSession() {
+                return Optional.empty();
+            }
+
+            @Override
+            public URI uri() {
+                return null;
+            }
+
+            @Override
+            public HttpClient.Version version() {
+                return null;
+            }
+        };
+        doReturn(httpResponse).when(httpClient).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+        Assertions.assertThrows(WeatherApiException.class, () -> weatherApiService.searchLocationsByName("El dorado"));
     }
 }

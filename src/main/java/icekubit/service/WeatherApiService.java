@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import icekubit.dto.LocationDto;
 import icekubit.dto.WeatherDto;
+import icekubit.exception.WeatherApiException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ public class WeatherApiService {
 
     private final static String API_KEY
             = URLEncoder.encode(System.getenv("OPEN_WEATHER_API_KEY"), StandardCharsets.UTF_8);
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final HttpClient httpClient;
 
@@ -32,16 +35,13 @@ public class WeatherApiService {
                 , name.replaceAll(" ", "_")
                 , 5
                 , API_KEY));
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        ObjectMapper objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        if (response.statusCode() / 100 == 4 || response.statusCode() / 100 == 5) {
+            throw new WeatherApiException("The weather API returned error status");
+        }
         return objectMapper.readValue(response.body(), new TypeReference<List<LocationDto>>(){});
+
     }
 
     public WeatherDto getWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude)
@@ -52,15 +52,11 @@ public class WeatherApiService {
         , longitude
         , API_KEY
         , "metric"));
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        ObjectMapper objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        if (response.statusCode() / 100 == 4 || response.statusCode() / 100 == 5) {
+            throw new WeatherApiException("The weather API returned error status");
+        }
         return objectMapper.readValue(response.body(), WeatherDto.class);
     }
 }
