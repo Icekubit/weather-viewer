@@ -12,6 +12,8 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
+import java.net.http.HttpClient;
+
 @WebListener
 public class ServletContextInitializer implements ServletContextListener {
     private UserSessionDao userSessionDao;
@@ -32,7 +34,7 @@ public class ServletContextInitializer implements ServletContextListener {
         locationDao = new LocationDao();
         authorizationService = new AuthorizationService(userSessionDao, userDao);
         registrationService = new RegistrationService(userDao);
-        weatherApiService = new WeatherApiService();
+        weatherApiService = new WeatherApiService(HttpClient.newHttpClient());
         userWeatherService = new UserWeatherService(locationDao, weatherApiService);
 
         servletContext.setAttribute("authorizationService", authorizationService);

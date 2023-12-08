@@ -21,8 +21,11 @@ public class WeatherApiService {
     private final static String API_KEY
             = URLEncoder.encode(System.getenv("OPEN_WEATHER_API_KEY"), StandardCharsets.UTF_8);
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient;
 
+    public WeatherApiService(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
     public List<LocationDto> searchLocationsByName(String name) throws IOException, InterruptedException {
         URI uri = URI.create(String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s"
