@@ -30,7 +30,7 @@ public class SearchingLocationsServlet extends BaseServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

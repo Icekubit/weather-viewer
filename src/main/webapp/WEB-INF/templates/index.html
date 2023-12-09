@@ -14,7 +14,7 @@
         <a href="authorization">Sign in</a>
     </div>
     <div th:if="${username != null}">
-        <form action="search_location" method="post">
+        <form action="search_location" method="GET">
             <label for="search-input">Enter location:</label>
             <input type="text" id="search-input" name="location" required>
             <button type="submit">Search!</button>
