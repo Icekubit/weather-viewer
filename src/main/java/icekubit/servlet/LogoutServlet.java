@@ -16,34 +16,24 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
-// TODO переделать кэтч
 
 
 @WebServlet("/logout")
-public class LogoutServlet extends HttpServlet {
-    private AuthorizationService authorizationService;
+public class LogoutServlet extends BaseServlet {
 
     @Override
-    public void init(ServletConfig config) {
-        ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        User user = null;
-        if (cookies != null) {
-            Optional<Cookie> cookieOptional = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("user_session"))
-                    .findFirst();
-            if (cookieOptional.isPresent()) {
-                authorizationService.logout(cookieOptional.get().getValue());
-                Cookie sessionCookie = new Cookie("user_session", "");
-                sessionCookie.setMaxAge(0);
-                resp.addCookie(sessionCookie);
-            }
+        Optional<User> userOptional = getUserIfCookieSessionExist(req);
+        if (userOptional.isPresent()) {
+            authorizationService.logout(userOptional.get());
+            Cookie sessionCookie = new Cookie("user_session", "");
+            sessionCookie.setMaxAge(0);
+            resp.addCookie(sessionCookie);
         }
-
         resp.sendRedirect("/");
     }
 }

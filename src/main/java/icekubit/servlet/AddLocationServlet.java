@@ -18,43 +18,34 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @WebServlet("/add_location")
-public class AddLocationServlet extends HttpServlet {
+public class AddLocationServlet extends BaseServlet {
 
-    private AuthorizationService authorizationService;
+//    private AuthorizationService authorizationService;
     private UserWeatherService userWeatherService;
     @Override
     public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+//        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
         userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Cookie[] cookies = req.getCookies();
-        User user = null;
-        if (cookies != null) {
-            Optional<Cookie> cookieOptional = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("user_session"))
-                    .findFirst();
-            if (cookieOptional.isPresent()) {
-                Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
-                if (userOptional.isPresent()) {
-                    user = userOptional.get();
-                    Location location = Location
-                            .builder()
-                            .name(req.getParameter("name"))
-                            .latitude(new BigDecimal(req.getParameter("latitude")))
-                            .longitude(new BigDecimal(req.getParameter("longitude")))
-                            .user(user)
-                            .build();
-                    userWeatherService.save(location);
-                }
-            }
-        }
 
+        getUserIfCookieSessionExist(req).ifPresent(
+                user -> userWeatherService.save(
+                        Location.builder()
+                                .name(req.getParameter("name"))
+                                .latitude(new BigDecimal(req.getParameter("latitude")))
+                                .longitude(new BigDecimal(req.getParameter("longitude")))
+                                .user(user)
+                                .build()
+                )
+        );
         resp.sendRedirect("/");
 
     }

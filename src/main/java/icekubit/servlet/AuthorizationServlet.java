@@ -20,14 +20,12 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/authorization")
-public class AuthorizationServlet extends HttpServlet {
-    private AuthorizationService authorizationService;
+public class AuthorizationServlet extends BaseServlet {
     private static final Integer SESSION_DURATION = Integer.parseInt(PropertiesUtil.get("session.duration"));
 
     @Override
-    public void init(ServletConfig config) {
-        ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
     }
 
     @Override

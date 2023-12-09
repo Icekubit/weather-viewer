@@ -42,6 +42,17 @@ public class UserSessionDao {
         }
     }
 
+    public void deleteByUserId(int userId) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Query query
+                    = session.createQuery("delete from UserSession where user.id = :userId");
+            query.setParameter("userId", userId);
+            query.executeUpdate();
+            transaction.commit();
+        }
+    }
+
 
     public void deleteExpiredUserSessions(LocalDateTime now) {
         try (Session session = sessionFactory.openSession()) {

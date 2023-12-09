@@ -29,6 +29,8 @@ public class UserWeatherService {
             WeatherDto weatherDto = weatherApiService
                     .getWeatherByCoordinates(location.getLatitude(), location.getLongitude());
             weatherDto.setLocationId(location.getId());
+            // name in the weather json may be empty, so we assign it from location variable
+            weatherDto.setName(location.getName());
             userLocations.add(weatherDto);
         }
         return userLocations;

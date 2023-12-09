@@ -36,7 +36,6 @@ public class LocationDao {
             Hibernate.initialize(locations);
             transaction.commit();
         }
-
         return locations;
     }
 

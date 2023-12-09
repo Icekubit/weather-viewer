@@ -20,14 +20,13 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
-    private AuthorizationService authorizationService;
+public class RegistrationServlet extends BaseServlet {
     private RegistrationService registrationService;
 
     @Override
-    public void init(ServletConfig config) {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
         registrationService = (RegistrationService) servletContext.getAttribute("registrationService");
     }
     @Override

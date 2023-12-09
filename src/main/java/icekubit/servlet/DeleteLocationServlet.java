@@ -18,32 +18,22 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @WebServlet("/delete_location")
-public class DeleteLocationServlet extends HttpServlet {
-    private AuthorizationService authorizationService;
+public class DeleteLocationServlet extends BaseServlet {
     private UserWeatherService userWeatherService;
     @Override
     public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
         userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Cookie[] cookies = req.getCookies();
-        User user = null;
-        if (cookies != null) {
-            Optional<Cookie> cookieOptional = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("user_session"))
-                    .findFirst();
-            if (cookieOptional.isPresent()) {
-                Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
-                if (userOptional.isPresent()) {
-                    user = userOptional.get();
-                    int locationId = Integer.parseInt(req.getParameter("locationId"));
-                    userWeatherService.deleteLocation(user, locationId);
-                }
-            }
+        Optional<User> userOptional = getUserIfCookieSessionExist(req);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            int locationId = Integer.parseInt(req.getParameter("locationId"));
+            userWeatherService.deleteLocation(user, locationId);
         }
         resp.sendRedirect("/");
     }

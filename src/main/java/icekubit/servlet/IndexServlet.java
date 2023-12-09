@@ -8,6 +8,7 @@ import icekubit.service.WeatherApiService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -22,48 +23,33 @@ import java.util.List;
 import java.util.Optional;
 
 @WebServlet("")
-public class IndexServlet extends HttpServlet {
-
-    private AuthorizationService authorizationService;
+public class IndexServlet extends BaseServlet {
     private UserWeatherService userWeatherService;
 
     @Override
-    public void init(ServletConfig config) {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         ServletContext servletContext = config.getServletContext();
-        authorizationService = (AuthorizationService) servletContext.getAttribute("authorizationService");
         userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Cookie[] cookies = req.getCookies();
-        User user = null;
-        String username = null;
-        List<WeatherDto> userLocations = null;
-        if (cookies != null) {
-            Optional<Cookie> cookieOptional = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("user_session"))
-                    .findFirst();
-            if (cookieOptional.isPresent()) {
-                Optional<User> userOptional = authorizationService.getUserForThisSession(cookieOptional.get().getValue());
-                if (userOptional.isPresent()) {
-                    user = userOptional.get();
-                    username = user.getLogin();
-                    try {
-                        userLocations = userWeatherService.getUserLocations(user);
-                        System.out.println(userLocations);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }
+        Optional<User> userOptional = getUserIfCookieSessionExist(req);
         TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String username = user.getLogin();
+            context.setVariable("username", username);
+            try {
+                List<WeatherDto> userLocations = userWeatherService.getUserLocations(user);
+                context.setVariable("userLocations", userLocations);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-
-        context.setVariable("username", username);
-        context.setVariable("userLocations", userLocations);
         templateEngine.process("index", context, resp.getWriter());
 
     }
