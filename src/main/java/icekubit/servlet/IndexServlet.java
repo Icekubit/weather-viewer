@@ -2,23 +2,18 @@ package icekubit.servlet;
 
 import icekubit.dto.WeatherDto;
 import icekubit.entity.User;
-import icekubit.service.AuthorizationService;
 import icekubit.service.UserWeatherService;
-import icekubit.service.WeatherApiService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

@@ -36,15 +36,14 @@ public class SearchingLocationsServlet extends BaseServlet {
             User user = userOptional.get();
             TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
             WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
-            List<LocationDto> locations = null;
             try {
-                locations = userWeatherService
+                List<LocationDto> locations = userWeatherService
                         .searchLocationsByNameAndExcludeSaved(user, req.getParameter("location"));
+                context.setVariable("locations", locations);
+                templateEngine.process("searching-location", context, resp.getWriter());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            context.setVariable("locations", locations);
-            templateEngine.process("searching-location", context, resp.getWriter());
         } else {
             resp.sendRedirect("/");
         }
