@@ -38,7 +38,9 @@ public class SearchingLocationsServlet extends BaseServlet {
             WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
             try {
                 List<LocationDto> locations = userWeatherService
-                        .searchLocationsByNameAndExcludeSaved(user, req.getParameter("location"));
+                        .searchLocationsByNameAndExcludeSaved(user, req.getParameter("searchQuery"));
+                context.setVariable("username", user.getLogin());
+                context.setVariable("searchQuery", req.getParameter("searchQuery"));
                 context.setVariable("locations", locations);
                 templateEngine.process("searching-location", context, resp.getWriter());
             } catch (InterruptedException e) {

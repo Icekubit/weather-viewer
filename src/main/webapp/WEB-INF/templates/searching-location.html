@@ -2,22 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <title>Search location</title>
 </head>
 <body>
-    <form action="search_location" method="GET">
-        <label for="search-input">Enter location:</label>
-        <input type="text" id="search-input" name="location" required>
-        <button type="submit">Search!</button>
-    </form>
-    <div th:each="location: ${locations}">
-        <p th:text="${location.name + ', ' + location.country}"></p>
-        <form action="add_location" method="post">
-            <input type="hidden" th:value="${location.lat}" th:attr="name='latitude'"/>
-            <input type="hidden" th:value="${location.lon}" th:attr="name='longitude'"/>
-            <input type="hidden" th:value="${location.name}" th:attr="name='name'"/>
-            <button type="submit">Add</button>
-        </form>
+    <div class="container-fluid">
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <h1 class="d-flex align-items-center mb-3 mb-sm-0 me-sm-auto text-dark text-decoration-none">
+                <span th:text="'Hello, ' + ${username}"></span>
+            </h1>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link">Main</a></li>
+                <li class="nav-item"><a href="logout" class="nav-link">Log out</a></li>
+            </ul>
+        </header>
+    </div>
+    <main>
+        <div th:if="${username != null}" class="text-center">
+            <h1 th:if="${locations.isEmpty()}" th:text="'No results for ' + ${searchQuery}"></h1>
+            <form action="search_location" method="GET">
+                <label for="search-input">Enter location:</label>
+                <input type="text" id="search-input" name="searchQuery" required>
+                <button type="submit" class="btn btn-primary">Search!</button>
+            </form>
+        </div>
+        <div class="row">
+            <div th:each="location: ${locations}" class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-10">
+                <div class="card text-center" style="height: 20rem; padding-bottom: 10%; margin: 10% 0;">
+                    <div class="card-body">
+                        <p th:text="${'Location: ' + location.name}" class="card-text"></p>
+                        <p th:text="${'Country: ' + location.country}" class="card-text"></p>
+                        <p th:text="${'Latitude: ' + location.lat}" class="card-text"></p>
+                        <p th:text="${'Longitude: ' + location.lon}" class="card-text"></p>
+                    </div>
+                    <form action="add_location" method="post">
+                        <input type="hidden" th:value="${location.lat}" th:attr="name='latitude'"/>
+                        <input type="hidden" th:value="${location.lon}" th:attr="name='longitude'"/>
+                        <input type="hidden" th:value="${location.name}" th:attr="name='name'"/>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
     </div>
 </body>
 </html>

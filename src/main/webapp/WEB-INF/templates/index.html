@@ -26,7 +26,7 @@
             <div th:if="${username != null}" class="text-center">
                 <form action="search_location" method="GET">
                     <label for="search-input">Enter location:</label>
-                    <input type="text" id="search-input" name="location" required>
+                    <input type="text" id="search-input" name="searchQuery" required>
                     <button type="submit" class="btn btn-primary">Search!</button>
                 </form>
             </div>
