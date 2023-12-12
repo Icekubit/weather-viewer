@@ -2,6 +2,7 @@ package icekubit.service;
 
 import icekubit.dao.UserDao;
 import icekubit.entity.User;
+import icekubit.exception.UserAlreadyExistException;
 import icekubit.util.PasswordUtil;
 
 public class RegistrationService {
@@ -16,6 +17,10 @@ public class RegistrationService {
         User user = new User();
         user.setLogin(username);
         user.setPassword(PasswordUtil.hashPassword(password));
+        // check if user exists - can't rely on case-sensitive username unique constraint
+        if (userDao.getUserByUsername(username).isPresent()) {
+            throw new UserAlreadyExistException("This user already exists");
+        }
         return userDao.save(user);
     }
 }
