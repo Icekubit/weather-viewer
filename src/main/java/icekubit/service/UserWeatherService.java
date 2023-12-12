@@ -8,6 +8,7 @@ import icekubit.entity.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class UserWeatherService {
             weatherDto.setName(location.getName());
             userLocations.add(weatherDto);
         }
+        userLocations.sort(Comparator.comparingInt(WeatherDto::getLocationId));
         return userLocations;
     }
 
