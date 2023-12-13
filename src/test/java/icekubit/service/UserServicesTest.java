@@ -35,7 +35,7 @@ public class UserServicesTest {
 
     @Test
     void userIsPresentInDatabaseAfterRegistration() {
-        Optional<User> maybeUser = userDao.getUserByUsername("username");
+        Optional<User> maybeUser = userDao.findByLogin("username");
         assertThat(maybeUser).isPresent();
     }
 

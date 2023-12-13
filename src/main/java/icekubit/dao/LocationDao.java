@@ -21,22 +21,23 @@ public class LocationDao {
 
 
     public List<Location> findLocationsByUserId(int userId) {
-        return sessionFactory.openSession().createQuery("select l from Location l " +
-                "join l.user where l.user.id = :userId", Location.class)
-                .setParameter("userId", userId)
-                .list();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select l from Location l " +
+                    "join l.user where l.user.id = :userId", Location.class)
+                    .setParameter("userId", userId)
+                    .list();
+        }
     }
 
     public void delete(int userId, int locationId) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            String hql = "DELETE FROM Location l "
+            session.createQuery("DELETE FROM Location l "
                     + "WHERE l.user.id = :userId "
-                    + "AND l.id = :locationId";
-            Query query = session.createQuery(hql);
-            query.setParameter("userId", userId);
-            query.setParameter("locationId", locationId);
-            query.executeUpdate();
+                    + "AND l.id = :locationId")
+                    .setParameter("userId", userId)
+                    .setParameter("locationId", locationId)
+                    .executeUpdate();
             transaction.commit();
         }
     }

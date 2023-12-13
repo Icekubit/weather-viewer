@@ -26,7 +26,7 @@ public class AuthorizationService {
 
 
     public UUID authorizeUser(String username, String password) {
-        Optional<User> userOptional = userDao.getUserByUsername(username);
+        Optional<User> userOptional = userDao.findByLogin(username);
         if (userOptional.isEmpty()) {
             throw new NoSuchUserException();
         } else if (!PasswordUtil.checkPassword(userOptional.get().getPassword(), password)) {
@@ -53,7 +53,7 @@ public class AuthorizationService {
 
     private UUID createSession(int userId) {
         UserSession userSession = new UserSession();
-        userSession.setUser(userDao.getUserById(userId).get());
+        userSession.setUser(userDao.findById(userId).get());
         userSession.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_DURATION));
         return userSessionDao.save(userSession);
     }

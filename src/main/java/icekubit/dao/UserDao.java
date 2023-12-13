@@ -7,15 +7,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
-import org.hibernate.query.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public class UserDao {
 
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    public int save(User user) {
+    public void save(User user) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             session.persist(user);
@@ -23,35 +21,30 @@ public class UserDao {
         } catch (ConstraintViolationException e) {
             throw new UserAlreadyExistException(e);
         }
-        return user.getId();
     }
 
-    public Optional<User> getUserById(int id) {
-        User user = null;
+    public Optional<User> findById(int id) {
+        User user;
         try (Session session = sessionFactory.openSession()) {
             user = session.get(User.class, id);
         }
         return Optional.of(user);
     }
 
-    public Optional<User> getUserByUsername(String username) {
+    public Optional<User> findByLogin(String username) {
         try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM User " +
-                    "WHERE Lower(login) = Lower(:login) ";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setParameter("login", username);
-
-            List<User> resultList = query.getResultList();
-            return resultList.stream().findFirst();
+            return session.createQuery("select u from User u " +
+                            "where lower(u.login) = lower(:login)", User.class)
+                    .setParameter("login", username)
+                    .uniqueResultOptional();
         }
     }
 
     public void deleteAll() {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query query
-                    = session.createQuery("delete from User where id > 0");
-            query.executeUpdate();
+            session.createQuery("delete from User where id > 0")
+                    .executeUpdate();
             transaction.commit();
         }
     }
