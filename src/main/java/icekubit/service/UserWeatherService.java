@@ -24,7 +24,7 @@ public class UserWeatherService {
     }
 
     public List<WeatherDto> getUserLocations(User user) throws IOException, InterruptedException {
-        List<Location> locations = locationDao.getLocationsForThisUser(user);
+        List<Location> locations = locationDao.findLocationsByUserId(user.getId());
         List<WeatherDto> userLocations = new ArrayList<>();
         for (Location location: locations) {
             WeatherDto weatherDto = weatherApiService
@@ -41,7 +41,7 @@ public class UserWeatherService {
     public List<LocationDto> searchLocationsByNameAndExcludeSaved(User user, String name)
             throws IOException, InterruptedException {
         List<LocationDto> foundLocations = weatherApiService.searchLocationsByName(name);
-        List<Location> userLocations = locationDao.getLocationsForThisUser(user);
+        List<Location> userLocations = locationDao.findLocationsByUserId(user.getId());
         return foundLocations.stream()
                 .filter(foundLocation ->
                         userLocations.stream()
@@ -56,6 +56,6 @@ public class UserWeatherService {
     }
 
     public void deleteLocation(User user, int locationId) {
-        locationDao.deleteLocation(user, locationId);
+        locationDao.delete(user.getId(), locationId);
     }
 }
