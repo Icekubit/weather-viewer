@@ -5,6 +5,7 @@ import icekubit.dao.UserDao;
 import icekubit.dao.UserSessionDao;
 import icekubit.entity.User;
 import icekubit.exception.UserAlreadyExistException;
+import icekubit.util.PropertiesUtil;
 import org.junit.jupiter.api.*;
 
 import java.util.Optional;
@@ -18,6 +19,8 @@ public class UserServicesTest {
     private UserSessionDao userSessionDao;
     private RegistrationService registrationService;
     private AuthorizationService authorizationService;
+    private final String TEST_LOGIN = "test_login";
+    private final String TEST_PASSWORD = "test_password";
 
     @BeforeAll
     void init() {
@@ -29,28 +32,28 @@ public class UserServicesTest {
 
     @BeforeEach
     void prepare() {
-        registrationService.registerUser("username", "password");
+        registrationService.registerUser(TEST_LOGIN, TEST_PASSWORD);
     }
 
 
     @Test
     void userIsPresentInDatabaseAfterRegistration() {
-        Optional<User> maybeUser = userDao.findByLogin("username");
+        Optional<User> maybeUser = userDao.findByLogin(TEST_LOGIN);
         assertThat(maybeUser).isPresent();
     }
 
     @Test
     void throwExceptionIfUserAlreadyExist() {
         assertThrows(UserAlreadyExistException.class,
-                () -> registrationService.registerUser("username", "password"));
+                () -> registrationService.registerUser(TEST_LOGIN, TEST_PASSWORD));
 
     }
 
     @Test
-    void userCantAuthorizeAfterAfterSessionIsExpired() throws InterruptedException {
-        String userSessionId = authorizationService.authorizeUser("username", "password").toString();
+    void userCantAuthorizeAfterSessionIsExpired() throws InterruptedException {
+        String userSessionId = authorizationService.authorizeUser(TEST_LOGIN, TEST_PASSWORD).toString();
         assertThat(authorizationService.getUserForThisSession(userSessionId)).isPresent();
-        Thread.sleep(2000);
+        Thread.sleep(Long.parseLong(PropertiesUtil.get("session.duration")) * 1000);
         assertThat(authorizationService.getUserForThisSession(userSessionId)).isEmpty();
     }
 
