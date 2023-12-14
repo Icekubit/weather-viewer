@@ -43,7 +43,7 @@ public class AuthorizationServlet extends BaseServlet {
             Cookie sessionCookie = new Cookie("user_session", sessionId.toString());
             sessionCookie.setMaxAge(SESSION_DURATION);
             resp.addCookie(sessionCookie);
-            resp.sendRedirect("/");
+            resp.sendRedirect(req.getContextPath() + "/");
         } catch (NoSuchUserException e1) {
             context.setVariable("invalidUser", true);
             templateEngine.process("authorization", context, resp.getWriter());

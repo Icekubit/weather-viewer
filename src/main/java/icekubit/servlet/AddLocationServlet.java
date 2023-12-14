@@ -38,7 +38,7 @@ public class AddLocationServlet extends BaseServlet {
                                 .build()
                 )
         );
-        resp.sendRedirect("/");
+        resp.sendRedirect(req.getContextPath() + "/");
 
     }
 }

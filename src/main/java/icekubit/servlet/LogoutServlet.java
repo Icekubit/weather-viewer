@@ -30,6 +30,6 @@ public class LogoutServlet extends BaseServlet {
             sessionCookie.setMaxAge(0);
             resp.addCookie(sessionCookie);
         }
-        resp.sendRedirect("/");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }

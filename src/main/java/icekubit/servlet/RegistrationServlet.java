@@ -45,7 +45,7 @@ public class RegistrationServlet extends BaseServlet {
             registrationService.registerUser(username, password);
             UUID sessionId = authorizationService.authorizeUser(username, password);
             resp.addCookie(new Cookie("user_session", sessionId.toString()));
-            resp.sendRedirect("/");
+            resp.sendRedirect(req.getContextPath() + "/");
         } catch (UserAlreadyExistException e) {
             context.setVariable("isUserAlreadyExist", true);
             templateEngine.process("registration", context, resp.getWriter());

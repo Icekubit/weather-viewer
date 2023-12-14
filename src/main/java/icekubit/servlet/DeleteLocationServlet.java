@@ -30,6 +30,6 @@ public class DeleteLocationServlet extends BaseServlet {
             int locationId = Integer.parseInt(req.getParameter("locationId"));
             userWeatherService.deleteLocation(user, locationId);
         }
-        resp.sendRedirect("/");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }

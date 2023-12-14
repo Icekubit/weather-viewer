@@ -47,7 +47,7 @@ public class SearchingLocationsServlet extends BaseServlet {
                 throw new RuntimeException(e);
             }
         } else {
-            resp.sendRedirect("/");
+            resp.sendRedirect(req.getContextPath() + "/");
         }
     }
 }
