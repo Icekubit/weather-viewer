@@ -9,6 +9,16 @@
     <title>Authorization page</title>
 </head>
 <body>
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <h1 class="d-flex align-items-center mb-3 mb-sm-0 me-sm-auto text-dark text-decoration-none">
+                <span>Hello, stranger!</span>
+            </h1>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a th:href="@{/}" class="nav-link">Main</a></li>
+            </ul>
+        </header>
+    </div>
     <div class="container mt-5">
         <form action="authorization" method="post" class="mx-auto col-md-6">
             <div class="form-group">
