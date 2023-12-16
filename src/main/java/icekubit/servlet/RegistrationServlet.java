@@ -19,16 +19,17 @@ import java.util.UUID;
 @WebServlet("/registration")
 public class RegistrationServlet extends BaseServlet {
     private RegistrationService registrationService;
+    private TemplateEngine templateEngine;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext servletContext = config.getServletContext();
         registrationService = (RegistrationService) servletContext.getAttribute("registrationService");
+        templateEngine = (TemplateEngine) servletContext.getAttribute("templateEngine");
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
         context.setVariable("isUserAlreadyExist", false);
         templateEngine.process("registration", context, resp.getWriter());
@@ -36,7 +37,6 @@ public class RegistrationServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
 
         String username = req.getParameter("username");

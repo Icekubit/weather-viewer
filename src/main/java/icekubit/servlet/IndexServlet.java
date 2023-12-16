@@ -20,18 +20,19 @@ import java.util.Optional;
 @WebServlet("")
 public class IndexServlet extends BaseServlet {
     private UserWeatherService userWeatherService;
+    private TemplateEngine templateEngine;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext servletContext = config.getServletContext();
         userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
+        templateEngine = (TemplateEngine) servletContext.getAttribute("templateEngine");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
-        TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
         if (userOptional.isPresent()) {
             User user = userOptional.get();

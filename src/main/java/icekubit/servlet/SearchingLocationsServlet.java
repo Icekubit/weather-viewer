@@ -21,12 +21,14 @@ import java.util.Optional;
 public class SearchingLocationsServlet extends BaseServlet {
 
     private UserWeatherService userWeatherService;
+    private TemplateEngine templateEngine;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext servletContext = config.getServletContext();
         userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
+        templateEngine = (TemplateEngine) servletContext.getAttribute("templateEngine");
     }
 
     @Override
@@ -34,7 +36,6 @@ public class SearchingLocationsServlet extends BaseServlet {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
             WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
             try {
                 List<LocationDto> locations = userWeatherService
