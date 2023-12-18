@@ -36,11 +36,11 @@
                             <div class="card-body">
                                 <p th:text="${'Location: ' + userLocation.name}" class="card-text"></p>
                                 <p th:text="${'Weather: ' + userLocation.descriptionOfWeather}" class="card-text"></p>
-                                <p th:text="${'Temperature: ' + userLocation.temp}" class="card-text"></p>
-                                <p th:text="${'Feels like: ' + userLocation.feelsLikeTemp}" class="card-text"></p>
-                                <p th:text="${'Pressure: ' + userLocation.pressure}" class="card-text"></p>
-                                <p th:text="${'Humidity: ' + userLocation.humidity}" class="card-text"></p>
-                                <p th:text="${'Wind speed: ' + userLocation.windSpeed}" class="card-text"></p>
+                                <p th:text="${'Temperature: ' + userLocation.temp + ' °C'}" class="card-text"></p>
+                                <p th:text="${'Feels like: ' + userLocation.feelsLikeTemp + ' °С'}" class="card-text"></p>
+                                <p th:text="${'Pressure: ' + userLocation.pressure + ' torr'}" class="card-text"></p>
+                                <p th:text="${'Humidity: ' + userLocation.humidity + ' %'}" class="card-text"></p>
+                                <p th:text="${'Wind speed: ' + userLocation.windSpeed + ' m/s'}" class="card-text"></p>
                                 <p th:text="${'Wind direction: ' + userLocation.windDirection}" class="card-text"></p>
                             </div>
                             <form action="delete_location" method="post">
