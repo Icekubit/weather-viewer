@@ -1,6 +1,6 @@
 package icekubit.servlet;
 
-import icekubit.exception.UserAlreadyExistException;
+import icekubit.exception.*;
 import icekubit.service.RegistrationService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
@@ -46,6 +46,18 @@ public class RegistrationServlet extends BaseServlet {
             UUID sessionId = authorizationService.authorizeUser(username, password);
             resp.addCookie(new Cookie("user_session", sessionId.toString()));
             resp.sendRedirect(req.getContextPath() + "/");
+        } catch (LoginIsTooShortException e) {
+            context.setVariable("isLoginTooShort", true);
+            templateEngine.process("registration", context, resp.getWriter());
+        } catch (LoginIsTooLongException e) {
+            context.setVariable("isLoginTooLong", true);
+            templateEngine.process("registration", context, resp.getWriter());
+        } catch (PasswordIsTooShortException e) {
+            context.setVariable("isPasswordTooShort", true);
+            templateEngine.process("registration", context, resp.getWriter());
+        } catch (PasswordIsTooLongException e) {
+            context.setVariable("isPasswordTooLong", true);
+            templateEngine.process("registration", context, resp.getWriter());
         } catch (UserAlreadyExistException e) {
             context.setVariable("isUserAlreadyExist", true);
             templateEngine.process("registration", context, resp.getWriter());
