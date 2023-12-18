@@ -10,7 +10,6 @@
     <title>Search location</title>
 </head>
 <body>
-    <div class="container-fluid">
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <h1 class="d-flex align-items-center mb-3 mb-sm-0 me-sm-auto text-dark text-decoration-none">
@@ -29,6 +28,7 @@
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
+        <h3 th:if="${locations.isEmpty()}" th:text="'No results for ' + ${searchQuery}" class="text-center" style="margin-top: 20px;"></h3>
         <div class="row">
             <div th:each="location: ${locations}" class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-10 mx-auto text-center">
                 <div class="card text-center" style="height: 20rem; padding-bottom: 10%; margin: 10% 0;">
@@ -48,6 +48,5 @@
             </div>
         </div>
     </main>
-    </div>
 </body>
 </html>
