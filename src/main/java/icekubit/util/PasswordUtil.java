@@ -1,15 +1,15 @@
 package icekubit.util;
 
-import org.mindrot.jbcrypt.BCrypt;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class PasswordUtil {
-    private static final String salt = "$2a$10$6Eph/Z5xgF6r4nOWWqGHge";
 
     public static boolean checkPassword(String passwordFromDatabase, String userInputPassword) {
-        return BCrypt.hashpw(userInputPassword, salt).equals(passwordFromDatabase);
+        return BCrypt.verifyer().verify(userInputPassword.toCharArray(), passwordFromDatabase).verified;
     }
 
     public static String hashPassword(String password) {
-        return BCrypt.hashpw(password, salt);
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 }
