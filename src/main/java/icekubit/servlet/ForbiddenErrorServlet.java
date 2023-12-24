@@ -16,33 +16,26 @@ import org.thymeleaf.context.WebContext;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet("/delete_location")
-public class DeleteLocationServlet extends BaseServlet {
-    private UserWeatherService userWeatherService;
+@WebServlet("/forbidden")
+public class ForbiddenErrorServlet extends BaseServlet {
     private TemplateEngine templateEngine;
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         ServletContext servletContext = config.getServletContext();
-        userWeatherService = (UserWeatherService) servletContext.getAttribute("userWeatherService");
         templateEngine = (TemplateEngine) servletContext.getAttribute("templateEngine");
 
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
+        WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            int locationId = Integer.parseInt(req.getParameter("locationId"));
-            try {
-                userWeatherService.deleteLocation(user, locationId);
-                resp.sendRedirect(req.getContextPath() + "/");
-            } catch (UnauthorizedActionException e) {
-                resp.setStatus(403);
-                resp.sendRedirect(req.getContextPath() + "/forbidden");
-            }
-        } else {
+            context.setVariable("username", user.getLogin());
+            templateEngine.process("forbidden-action", context, resp.getWriter());
+            } else {
             resp.sendRedirect(req.getContextPath() + "/");
         }
     }

@@ -56,6 +56,7 @@ public class UserWeatherService {
     }
 
     public void deleteLocation(User user, int locationId) {
+
         locationDao.delete(user.getId(), locationId);
     }
 }

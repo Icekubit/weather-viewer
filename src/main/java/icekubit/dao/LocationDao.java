@@ -1,6 +1,7 @@
 package icekubit.dao;
 
 import icekubit.entity.Location;
+import icekubit.exception.UnauthorizedActionException;
 import icekubit.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -32,12 +33,15 @@ public class LocationDao {
     public void delete(int userId, int locationId) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.createQuery("DELETE FROM Location l "
+            int numberOfDeletedLocations = session.createQuery("DELETE FROM Location l "
                     + "WHERE l.user.id = :userId "
                     + "AND l.id = :locationId")
                     .setParameter("userId", userId)
                     .setParameter("locationId", locationId)
                     .executeUpdate();
+            if (numberOfDeletedLocations != 1) {
+                throw new UnauthorizedActionException();
+            }
             transaction.commit();
         }
     }
