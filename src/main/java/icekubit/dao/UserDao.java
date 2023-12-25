@@ -44,7 +44,7 @@ public class UserDao {
     public void deleteAll() {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.createQuery("delete from User where id > 0")
+            session.createQuery("delete from User")
                     .executeUpdate();
             transaction.commit();
         }
