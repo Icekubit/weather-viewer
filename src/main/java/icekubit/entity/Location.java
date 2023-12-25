@@ -27,14 +27,4 @@ public class Location {
     @ManyToOne
     @JoinColumn(name = "UserId", referencedColumnName = "ID")
     private User user;
-
-    @Override
-    public String toString() {
-        return "Location{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
-    }
 }

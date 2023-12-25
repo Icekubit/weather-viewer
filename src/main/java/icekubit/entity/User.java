@@ -20,12 +20,4 @@ public class User {
     @Column(unique = true, nullable = false)
     private String login;
     private String password;
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }
