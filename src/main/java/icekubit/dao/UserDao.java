@@ -28,8 +28,9 @@ public class UserDao {
         try (Session session = sessionFactory.openSession()) {
             user = session.get(User.class, id);
         }
-        return Optional.of(user);
+        return Optional.ofNullable(user);
     }
+
 
     public Optional<User> findByLogin(String username) {
         try (Session session = sessionFactory.openSession()) {
