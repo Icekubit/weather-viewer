@@ -44,7 +44,7 @@ public class WeatherApiService {
 
     }
 
-    public WeatherDto getWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude)
+    public WeatherDto getWeatherByCoordinates(Double latitude, Double longitude)
             throws IOException, InterruptedException {
         URI uri = URI.create(
                 String.format("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=%s"

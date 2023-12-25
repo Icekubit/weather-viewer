@@ -87,9 +87,7 @@ public class WeatherApiServiceTest {
         };
         doReturn(httpResponse).when(httpClient).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
         LocationDto moscowDto =
-                new LocationDto("Moscow", "RU",
-                        BigDecimal.valueOf(55.7504461),
-                        BigDecimal.valueOf(37.6174943));
+                new LocationDto("Moscow", "RU", 55.7504461,37.6174943);
         List<LocationDto> locations = weatherApiService.searchLocationsByName("Moscow");
         assertThat(locations).contains(moscowDto);
     }

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class LocationDto {
     private String name;
     private String country;
-    private BigDecimal lat;
-    private BigDecimal lon;
+    private Double lat;
+    private Double lon;
 
 }
