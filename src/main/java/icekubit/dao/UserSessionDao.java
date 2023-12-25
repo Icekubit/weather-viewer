@@ -28,7 +28,7 @@ public class UserSessionDao {
         try (Session session = sessionFactory.openSession()) {
             userSession = session.get(UserSession.class, id);
         }
-        return userSession == null ? Optional.empty() : Optional.of(userSession);
+        return Optional.ofNullable(userSession);
     }
 
     public void delete(UUID userSessionId) {
