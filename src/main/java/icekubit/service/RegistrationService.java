@@ -15,9 +15,10 @@ public class RegistrationService {
 
     public void registerUser(String username, String password) {
         validateCredentials(username, password);
-        User user = new User();
-        user.setLogin(username);
-        user.setPassword(PasswordUtil.hashPassword(password));
+        User user = User.builder()
+                .login(username)
+                .password(PasswordUtil.hashPassword(password))
+                .build();
         userDao.save(user);
     }
 
