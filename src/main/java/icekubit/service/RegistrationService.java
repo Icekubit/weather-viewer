@@ -22,17 +22,16 @@ public class RegistrationService {
     }
 
     private void validateCredentials(String username, String password) {
-        if (username.length() > 20) {
-            throw new LoginIsTooLongException();
-        }
         if (username.length() < 3) {
             throw new LoginIsTooShortException();
+        } else if (username.length() > 20) {
+            throw new LoginIsTooLongException();
         }
-        if (password.length() > 50) {
-            throw new PasswordIsTooLongException();
-        }
+
         if (password.length() < 8) {
             throw new PasswordIsTooShortException();
+        } else if (password.length() > 50) {
+            throw new PasswordIsTooLongException();
         }
     }
 
