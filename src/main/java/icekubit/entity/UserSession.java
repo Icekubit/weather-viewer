@@ -8,7 +8,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Sessions")
+@Table(
+        name = "Sessions",
+        indexes = @Index(columnList = "ExpiresAt")
+)
 @Data
 @NoArgsConstructor
 public class UserSession {
