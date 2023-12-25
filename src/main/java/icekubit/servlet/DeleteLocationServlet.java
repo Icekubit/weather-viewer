@@ -39,7 +39,6 @@ public class DeleteLocationServlet extends BaseServlet {
                 userWeatherService.deleteLocation(user, locationId);
                 resp.sendRedirect(req.getContextPath() + "/");
             } catch (UnauthorizedActionException e) {
-                resp.setStatus(403);
                 resp.sendRedirect(req.getContextPath() + "/forbidden");
             }
         } else {

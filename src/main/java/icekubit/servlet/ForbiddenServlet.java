@@ -1,8 +1,6 @@
 package icekubit.servlet;
 
 import icekubit.entity.User;
-import icekubit.exception.UnauthorizedActionException;
-import icekubit.service.UserWeatherService;
 import icekubit.util.ThymeleafUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -17,7 +15,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @WebServlet("/forbidden")
-public class ForbiddenErrorServlet extends BaseServlet {
+public class ForbiddenServlet extends BaseServlet {
     private TemplateEngine templateEngine;
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -34,6 +32,8 @@ public class ForbiddenErrorServlet extends BaseServlet {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             context.setVariable("username", user.getLogin());
+
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             templateEngine.process("forbidden-action", context, resp.getWriter());
             } else {
             resp.sendRedirect(req.getContextPath() + "/");
