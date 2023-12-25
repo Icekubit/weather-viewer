@@ -19,7 +19,7 @@ public class UserSession {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private LocalDateTime expiresAt;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "UserId", referencedColumnName = "ID")
     private User user;
 }

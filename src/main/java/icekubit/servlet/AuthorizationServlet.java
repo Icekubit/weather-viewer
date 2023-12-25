@@ -39,7 +39,7 @@ public class AuthorizationServlet extends BaseServlet {
         TemplateEngine templateEngine = (TemplateEngine) req.getServletContext().getAttribute("templateEngine");
         WebContext context = ThymeleafUtil.buildWebContext(req, resp, req.getServletContext());
         try {
-            UUID sessionId = authorizationService.authorizeUser(username, password);
+            UUID sessionId = authorizationService.assignSessionToUser(username, password);
             Cookie sessionCookie = new Cookie("user_session", sessionId.toString());
             sessionCookie.setMaxAge(SESSION_DURATION);
             resp.addCookie(sessionCookie);

@@ -20,11 +20,6 @@ public class User {
     @Column(unique = true, nullable = false)
     private String login;
     private String password;
-    @OneToMany(mappedBy = "user")
-    private List<Location> userLocations;
-    @OneToOne(mappedBy = "user")
-    private UserSession userSession;
-
     @Override
     public String toString() {
         return "User{" +

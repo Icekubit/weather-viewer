@@ -43,7 +43,7 @@ public class RegistrationServlet extends BaseServlet {
         String password = req.getParameter("password");
         try {
             registrationService.registerUser(username, password);
-            UUID sessionId = authorizationService.authorizeUser(username, password);
+            UUID sessionId = authorizationService.assignSessionToUser(username, password);
             resp.addCookie(new Cookie("user_session", sessionId.toString()));
             resp.sendRedirect(req.getContextPath() + "/");
         } catch (LoginIsTooShortException e) {

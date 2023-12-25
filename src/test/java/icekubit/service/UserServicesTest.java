@@ -51,7 +51,7 @@ public class UserServicesTest {
 
     @Test
     void userCantAuthorizeAfterSessionIsExpired() throws InterruptedException {
-        String userSessionId = authorizationService.authorizeUser(TEST_LOGIN, TEST_PASSWORD).toString();
+        String userSessionId = authorizationService.assignSessionToUser(TEST_LOGIN, TEST_PASSWORD).toString();
         assertThat(authorizationService.getUserForThisSession(userSessionId)).isPresent();
         Thread.sleep(Long.parseLong(PropertiesUtil.get("session.duration")) * 1000);
         assertThat(authorizationService.getUserForThisSession(userSessionId)).isEmpty();

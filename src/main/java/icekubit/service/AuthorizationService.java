@@ -25,7 +25,7 @@ public class AuthorizationService {
     }
 
 
-    public UUID authorizeUser(String username, String password) {
+    public UUID assignSessionToUser(String username, String password) {
         Optional<User> userOptional = userDao.findByLogin(username);
         if (userOptional.isEmpty()) {
             throw new NoSuchUserException();
@@ -33,9 +33,6 @@ public class AuthorizationService {
             throw new InvalidPasswordException();
         }
         User user = userOptional.get();
-        if (user.getUserSession() != null) {
-            userSessionDao.delete(user.getUserSession().getId());
-        }
         return createSession(user.getId());
     }
 
