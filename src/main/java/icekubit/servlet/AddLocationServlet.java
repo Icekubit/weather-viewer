@@ -32,8 +32,8 @@ public class AddLocationServlet extends BaseServlet {
                 user -> userWeatherService.save(
                         Location.builder()
                                 .name(req.getParameter("name"))
-                                .latitude(Double.parseDouble(req.getParameter("latitude")))
-                                .longitude(Double.parseDouble(req.getParameter("longitude")))
+                                .latitude(new BigDecimal(req.getParameter("latitude")))
+                                .longitude(new BigDecimal(req.getParameter("longitude")))
                                 .user(user)
                                 .build()
                 )

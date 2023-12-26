@@ -22,8 +22,8 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private Double latitude;
-    private Double longitude;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     @ManyToOne
     @JoinColumn(name = "UserId", referencedColumnName = "ID")
     private User user;
