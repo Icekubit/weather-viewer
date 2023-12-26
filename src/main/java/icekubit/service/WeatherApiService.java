@@ -32,7 +32,7 @@ public class WeatherApiService {
 
     public List<LocationDto> searchLocationsByName(String name) throws IOException, InterruptedException {
         URI uri = URI.create(String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=%d&appid=%s"
-                , name.replaceAll(" ", "_")
+                , URLEncoder.encode(name, StandardCharsets.UTF_8)
                 , 5
                 , API_KEY));
         HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
