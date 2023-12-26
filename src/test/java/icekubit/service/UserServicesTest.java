@@ -4,7 +4,7 @@ package icekubit.service;
 import icekubit.dao.UserDao;
 import icekubit.dao.UserSessionDao;
 import icekubit.entity.User;
-import icekubit.exception.UserAlreadyExistException;
+import icekubit.exception.UserAlreadyExistsException;
 import icekubit.util.PropertiesUtil;
 import org.junit.jupiter.api.*;
 
@@ -44,7 +44,7 @@ public class UserServicesTest {
 
     @Test
     void throwExceptionIfUserAlreadyExist() {
-        assertThrows(UserAlreadyExistException.class,
+        assertThrows(UserAlreadyExistsException.class,
                 () -> registrationService.registerUser(TEST_LOGIN, TEST_PASSWORD));
 
     }

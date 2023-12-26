@@ -1,7 +1,7 @@
 package icekubit.dao;
 
 import icekubit.entity.User;
-import icekubit.exception.UserAlreadyExistException;
+import icekubit.exception.UserAlreadyExistsException;
 import icekubit.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,7 +19,7 @@ public class UserDao {
             session.persist(user);
             transaction.commit();
         } catch (ConstraintViolationException e) {
-            throw new UserAlreadyExistException(e);
+            throw new UserAlreadyExistsException(e);
         }
     }
 

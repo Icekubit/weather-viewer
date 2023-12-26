@@ -58,7 +58,7 @@ public class RegistrationServlet extends BaseServlet {
         } catch (PasswordIsTooLongException e) {
             context.setVariable("isPasswordTooLong", true);
             templateEngine.process("registration", context, resp.getWriter());
-        } catch (UserAlreadyExistException e) {
+        } catch (UserAlreadyExistsException e) {
             context.setVariable("isUserAlreadyExist", true);
             templateEngine.process("registration", context, resp.getWriter());
         }
