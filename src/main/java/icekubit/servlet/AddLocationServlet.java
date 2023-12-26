@@ -2,6 +2,7 @@ package icekubit.servlet;
 
 import icekubit.entity.Location;
 import icekubit.entity.User;
+import icekubit.exception.LocationAlreadyExistsException;
 import icekubit.service.UserWeatherService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -28,16 +29,19 @@ public class AddLocationServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
-        userOptional.ifPresent(
-                user -> userWeatherService.save(
-                        Location.builder()
-                                .name(req.getParameter("name"))
-                                .latitude(new BigDecimal(req.getParameter("latitude")))
-                                .longitude(new BigDecimal(req.getParameter("longitude")))
-                                .user(user)
-                                .build()
-                )
-        );
+        if (userOptional.isPresent()) {
+            Location location = Location.builder()
+                    .name(req.getParameter("name"))
+                    .latitude(new BigDecimal(req.getParameter("latitude")))
+                    .longitude(new BigDecimal(req.getParameter("longitude")))
+                    .user(userOptional.get())
+                    .build();
+            try {
+                userWeatherService.save(location);
+            } catch (LocationAlreadyExistsException e) {
+                throw new RuntimeException();
+            }
+        }
         resp.sendRedirect(req.getContextPath() + "/");
 
     }
