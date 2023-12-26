@@ -1,7 +1,7 @@
 package icekubit.servlet;
 
-import icekubit.entity.Location;
 import icekubit.entity.User;
+import icekubit.exception.ForbiddenActionException;
 import icekubit.service.UserWeatherService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -29,13 +29,10 @@ public class DeleteLocationServlet extends BaseServlet {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             int locationId = Integer.parseInt(req.getParameter("locationId"));
-            Optional<Location> locationOptional = userWeatherService.findLocationById(locationId);
-
-            if (locationOptional.isPresent() &&
-                    locationOptional.get().getUser().getId() == user.getId()) {
-                userWeatherService.deleteLocation(locationId);
+            try {
+                userWeatherService.deleteLocation(locationId, user);
                 resp.sendRedirect(req.getContextPath() + "/");
-            } else {
+            } catch (ForbiddenActionException e) {
                 resp.sendRedirect(req.getContextPath() + "/forbidden");
             }
         } else {

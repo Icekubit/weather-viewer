@@ -5,6 +5,7 @@ import icekubit.dto.LocationDto;
 import icekubit.dto.WeatherDto;
 import icekubit.entity.Location;
 import icekubit.entity.User;
+import icekubit.exception.ForbiddenActionException;
 
 import java.io.IOException;
 import java.util.*;
@@ -53,8 +54,14 @@ public class UserWeatherService {
         locationDao.save(location);
     }
 
-    public void deleteLocation(int locationId) {
-        locationDao.delete(locationId);
+    public void deleteLocation(int locationId, User user) {
+        if (locationDao.findLocationById(locationId).isPresent() &&
+            locationDao.findLocationById(locationId).get().getUser().getId() == user.getId()) {
+            locationDao.delete(locationId);
+        } else {
+            throw new ForbiddenActionException();
+        }
+
     }
 
     public Optional<Location> findLocationById(int locationId) { return locationDao.findLocationById(locationId);}

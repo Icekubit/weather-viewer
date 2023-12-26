@@ -1,12 +1,10 @@
 package icekubit.dao;
 
 import icekubit.entity.Location;
-import icekubit.exception.UnauthorizedActionException;
 import icekubit.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Optional;
