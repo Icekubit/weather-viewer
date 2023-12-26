@@ -39,12 +39,14 @@ public class UserWeatherService {
         List<LocationDto> foundLocations = weatherApiService.searchLocationsByName(name);
         List<Location> userLocations = locationDao.findLocationsByUserId(user.getId());
         return foundLocations.stream()
-                .filter(foundLocation ->
-                        userLocations.stream()
-                                .noneMatch(userLocation ->
-                                        Objects.equals(foundLocation.getLat(), userLocation.getLatitude()) &&
-                                                Objects.equals(foundLocation.getLon(), userLocation.getLongitude())))
+                .filter(foundLocation -> !isLocationBelongToTheUser(foundLocation, userLocations))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isLocationBelongToTheUser(LocationDto foundLocation, List<Location> userLocations) {
+        return userLocations.stream()
+                .anyMatch(userLocation -> Objects.equals(foundLocation.getLat(), userLocation.getLatitude()) &&
+                        Objects.equals(foundLocation.getLon(), userLocation.getLongitude()));
     }
 
     public void save(Location location) {
