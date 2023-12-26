@@ -35,7 +35,8 @@ public class LocationDao {
     public List<Location> findLocationsByUserId(int userId) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("select l from Location l " +
-                    "join l.user where l.user.id = :userId", Location.class)
+                    "join l.user where l.user.id = :userId " +
+                    "order by l.id", Location.class)
                     .setParameter("userId", userId)
                     .list();
         }

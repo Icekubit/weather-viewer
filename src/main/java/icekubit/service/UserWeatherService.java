@@ -31,7 +31,6 @@ public class UserWeatherService {
             weatherDto.setName(location.getName());
             userLocations.add(weatherDto);
         }
-        userLocations.sort(Comparator.comparingInt(WeatherDto::getLocationId));
         return userLocations;
     }
 
