@@ -33,7 +33,7 @@ public class AuthorizationService {
             throw new InvalidPasswordException();
         }
         User user = userOptional.get();
-        return createSession(user.getId());
+        return saveSession(user.getId());
     }
 
     public Optional<User> getUserForThisSession(String uuid) {
@@ -48,7 +48,7 @@ public class AuthorizationService {
         userSessionDao.deleteByUserId(user.getId());
     }
 
-    private UUID createSession(int userId) {
+    private UUID saveSession(int userId) {
         UserSession userSession = new UserSession();
         userSession.setUser(userDao.findById(userId).get());
         userSession.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_DURATION));
