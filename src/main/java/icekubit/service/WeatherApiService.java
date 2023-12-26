@@ -37,9 +37,7 @@ public class WeatherApiService {
                 , API_KEY));
         HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() / 100 == 4 || response.statusCode() / 100 == 5) {
-            throw new WeatherApiException("The weather API returned error status");
-        }
+        throwExceptionIfResponseErrorStatus(response);
         return objectMapper.readValue(response.body(), new TypeReference<List<LocationDto>>(){});
 
     }
@@ -54,9 +52,13 @@ public class WeatherApiService {
         , "metric"));
         HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() / 100 == 4 || response.statusCode() / 100 == 5) {
+        throwExceptionIfResponseErrorStatus(response);
+        return objectMapper.readValue(response.body(), WeatherDto.class);
+    }
+
+    private void throwExceptionIfResponseErrorStatus(HttpResponse resp) {
+        if (resp.statusCode() / 100 == 4 || resp.statusCode() / 100 == 5) {
             throw new WeatherApiException("The weather API returned error status");
         }
-        return objectMapper.readValue(response.body(), WeatherDto.class);
     }
 }
