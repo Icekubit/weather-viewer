@@ -7,10 +7,7 @@ import icekubit.entity.Location;
 import icekubit.entity.User;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserWeatherService {
@@ -55,8 +52,9 @@ public class UserWeatherService {
         locationDao.save(location);
     }
 
-    public void deleteLocation(User user, int locationId) {
-
-        locationDao.delete(user.getId(), locationId);
+    public void deleteLocation(int locationId) {
+        locationDao.delete(locationId);
     }
+
+    public Optional<Location> findLocationById(int locationId) { return locationDao.findLocationById(locationId);}
 }

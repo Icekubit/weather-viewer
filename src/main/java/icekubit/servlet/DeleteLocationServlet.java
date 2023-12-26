@@ -1,5 +1,6 @@
 package icekubit.servlet;
 
+import icekubit.entity.Location;
 import icekubit.entity.User;
 import icekubit.exception.UnauthorizedActionException;
 import icekubit.service.UserWeatherService;
@@ -14,6 +15,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @WebServlet("/delete_location")
@@ -35,10 +37,13 @@ public class DeleteLocationServlet extends BaseServlet {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             int locationId = Integer.parseInt(req.getParameter("locationId"));
-            try {
-                userWeatherService.deleteLocation(user, locationId);
+            Optional<Location> locationOptional = userWeatherService.findLocationById(locationId);
+
+            if (locationOptional.isPresent() &&
+                    locationOptional.get().getUser().getId() == user.getId()) {
+                userWeatherService.deleteLocation(locationId);
                 resp.sendRedirect(req.getContextPath() + "/");
-            } catch (UnauthorizedActionException e) {
+            } else {
                 resp.sendRedirect(req.getContextPath() + "/forbidden");
             }
         } else {

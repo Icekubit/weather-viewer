@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public class LocationDao {
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -17,6 +18,16 @@ public class LocationDao {
             Transaction transaction = session.beginTransaction();
             session.persist(location);
             transaction.commit();
+        }
+    }
+
+    public Optional<Location> findLocationById(int locationId) {
+        try (Session session = sessionFactory.openSession()) {
+
+            return session
+                    .createQuery("select l from Location l where l.id = :locationId", Location.class)
+                    .setParameter("locationId", locationId)
+                    .uniqueResultOptional();
         }
     }
 
@@ -30,18 +41,13 @@ public class LocationDao {
         }
     }
 
-    public void delete(int userId, int locationId) {
+    public void delete(int locationId) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            int numberOfDeletedLocations = session.createQuery("DELETE FROM Location l "
-                    + "WHERE l.user.id = :userId "
-                    + "AND l.id = :locationId")
-                    .setParameter("userId", userId)
+            session
+                    .createQuery("delete from Location l where l.id = :locationId")
                     .setParameter("locationId", locationId)
                     .executeUpdate();
-            if (numberOfDeletedLocations != 1) {
-                throw new UnauthorizedActionException();
-            }
             transaction.commit();
         }
     }
