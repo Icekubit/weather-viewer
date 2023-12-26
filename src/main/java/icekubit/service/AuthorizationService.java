@@ -44,8 +44,8 @@ public class AuthorizationService {
         return Optional.empty();
     }
 
-    public void logout(User user) {
-        userSessionDao.deleteByUserId(user.getId());
+    public void logout(UUID sessionId) {
+        userSessionDao.deleteById(sessionId);
     }
 
     private UUID saveSession(User user) {

@@ -10,8 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
-
+import java.util.UUID;
 
 
 @WebServlet("/logout")
@@ -25,7 +26,12 @@ public class LogoutServlet extends BaseServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
         if (userOptional.isPresent()) {
-            authorizationService.logout(userOptional.get());
+            String sessionId = Arrays.stream(req.getCookies())
+                    .filter(cookie -> cookie.getName().equals("user_session"))
+                    .findFirst()
+                    .get()
+                    .getValue();
+            authorizationService.logout(UUID.fromString(sessionId));
             Cookie sessionCookie = new Cookie("user_session", "");
             sessionCookie.setMaxAge(0);
             resp.addCookie(sessionCookie);
