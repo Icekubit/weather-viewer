@@ -32,8 +32,6 @@ public class UserWeatherServiceTest {
     void throwExceptionIfUserAlreadyHasLocation() {
         User testUser = User.builder().login("test_user").password("test_password").build();
         userDao.save(testUser);
-        testUser = userDao.findByLogin("test_user").get();
-
         Location testLocation1 = Location.builder().name("test_location")
                 .latitude(BigDecimal.valueOf(42))
                 .longitude(BigDecimal.valueOf(42))
