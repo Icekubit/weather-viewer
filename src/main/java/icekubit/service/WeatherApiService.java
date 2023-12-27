@@ -39,7 +39,6 @@ public class WeatherApiService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         throwExceptionIfResponseErrorStatus(response);
         return objectMapper.readValue(response.body(), new TypeReference<List<LocationDto>>(){});
-
     }
 
     public WeatherDto getWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude)
