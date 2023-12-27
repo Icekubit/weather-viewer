@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserServicesTest {
+public class RegistrationAndAuthorizationServicesTest {
     private UserDao userDao;
     private UserSessionDao userSessionDao;
     private RegistrationService registrationService;
