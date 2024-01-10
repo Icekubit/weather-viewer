@@ -23,7 +23,7 @@ public class LogoutServlet extends BaseServlet {
         super.init(config);
     }
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<User> userOptional = getUserIfCookieSessionExist(req);
         if (userOptional.isPresent()) {
             String sessionId = Arrays.stream(req.getCookies())

@@ -16,7 +16,11 @@
                     <span th:text="'Hello, ' + ${username}"></span>
                 </h1>
                 <ul class="nav nav-pills">
-                    <li th:if="${username != null}" class="nav-item"><a href="logout" class="nav-link">Log out</a></li>
+                    <li th:if="${username != null}" class="nav-item">
+                        <form action="logout" method="POST">
+                            <button type="submit" class="nav-link">Log out</button>
+                        </form>
+                    </li>
                     <li th:if="${username == null}" class="nav-item"><a href="registration" class="nav-link">Sign up</a></li>
                     <li th:if="${username == null}" class="nav-item"><a href="authorization" class="nav-link">Sign in</a></li>
                 </ul>
